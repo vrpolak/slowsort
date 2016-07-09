@@ -14,6 +14,10 @@ class MutablePriorityQueue(object):
         """Return boolean corresponding to emptiness of the queue."""
         raise NotImplementedError
 
+    def is_nonempty(self):
+        """Return boolean corresponding to opposite of emptiness of the queue."""
+        raise NotImplementedError
+
     def add(self, item, priority):
         """Add item to self, return None."""
         raise NotImplementedError

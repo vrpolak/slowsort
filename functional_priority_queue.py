@@ -14,6 +14,10 @@ class FunctionalPriorityQueue(object):
         """Return boolean corresponding to emptiness of the queue."""
         raise NotImplementedError
 
+    def is_nonempty(self):
+        """Return boolean corresponding to opposite of emptiness of the queue."""
+        raise NotImplementedError
+
     def add(self, item, priority):
         """Return modified queue with added item."""
         raise NotImplementedError
