@@ -1,4 +1,4 @@
-"""Module that defines abstract functional priority queue"""
+"""Module that defines abstract functional priority queue."""
 
 # TODO: Make this Abstract Base Class so that users can rely on isinstance.
 
@@ -21,4 +21,3 @@ class FunctionalPriorityQueue(object):
     def pop(self):
         """If not empty, return tuple of the least item and the smaller queue."""
         raise NotImplementedError
-

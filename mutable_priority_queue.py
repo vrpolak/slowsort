@@ -1,4 +1,4 @@
-"""Module that defines abstract mutable priority queue"""
+"""Module that defines abstract mutable priority queue."""
 
 # TODO: Make this Abstract Base Class so that users can rely on isinstance.
 
@@ -21,4 +21,3 @@ class MutablePriorityQueue(object):
     def pop(self):
         """If not empty, extract the least item from self and return that."""
         raise NotImplementedError
-

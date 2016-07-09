@@ -1,13 +1,13 @@
-"""Module that defines abstract mutable binary tree node without a payload."""
+"""Module that defines abstract mutable binary tree node which carries a payload."""
 
 # TODO: Make this Abstract Base Class so that users can rely on isinstance.
 
-class MutableBinaryTreeBareNode(object):
-    """Node of binary tree, not carrying any payload.
+class MutableBinaryTreeLadenNode(object):
+    """Node of binary tree, not carrying a payload object.
     Left and right children are either None or also Node.
     Self is altered regularily to avoid excessive object creation."""
 
-    def __init__(self):
+    def __init__(self, payload):
         """Initialize an childless node."""
         raise NotImplementedError
 
