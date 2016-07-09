@@ -11,12 +11,20 @@ class MutableBinaryTreeLadenNode(object):
         """Initialize an childless node."""
         raise NotImplementedError
 
+    def get_payload(self):
+        """Return the payload, do not change state."""
+        raise NotImplementedError
+
     def get_left_child(self):
-        """Return left child or None."""
+        """Return left child or None, do not change state."""
         raise NotImplementedError
 
     def get_right_child(self):
-        """Return right child or None."""
+        """Return right child or None, do not change state."""
+        raise NotImplementedError
+
+    def swap_payload(self, payload):
+        """Set the new payload, return the old payload."""
         raise NotImplementedError
 
     def swap_left_child(self, node):
