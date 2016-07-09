@@ -13,10 +13,10 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
 
     This implementation uses deque to store ordered collection of sub-heaps."""
 
-    def __init__(self, top_item=None, forrest=deque()):
+    def __init__(self, top_item=None, forrest=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest
+        self.forrest = forrest or deque()
 
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
@@ -37,8 +37,9 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
     def add(self, payload, priority):
         """Add item to self, prioritized after current items, do not compare yet."""
         self.ensure_top_demoted()
-        item = MutableStableLazyZigzagPairingHeap((priority, payload))
-        self.include_after(item)
+        item = (priority, payload)
+        heap = MutableStableLazyZigzagPairingHeap(top_item=item)
+        self.forrest.append(heap)
 
     def include_after(self, heap):
         """Include another heap, prioritized after current items."""
@@ -85,7 +86,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                     former.include_after(latter)
                     new_forrest.appendleft(former)
             if self.forrest:
-                new_forrest.appendleft(self.forest.pop())
+                new_forrest.appendleft(self.forrest.pop())
             self.forrest = new_forrest
             # zag
             new_forrest = deque()
@@ -101,7 +102,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                     former.include_after(latter)
                     new_forrest.append(former)
             if self.forrest:
-                new_forrest.append(self.forest.pop())
+                new_forrest.append(self.forrest.pop())
             self.forrest = new_forrest
         new_state = self.forrest.pop()
         self.top_item = new_state.top_item
