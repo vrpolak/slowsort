@@ -10,7 +10,7 @@ class ComparisonLoggingWrapper(object):
 
     def __cmp__(self, other):
         """Compare and log."""
-        log.info("Called comparison on wrapped value: %s", self.value)
+        self.log.info("Called comparison on wrapped value: %s", self.value)
         try:
             other_value = other.value
             wrapped = True
@@ -18,9 +18,9 @@ class ComparisonLoggingWrapper(object):
             other_value = other
             wrapped = False
         if wrapped:
-            log.info("against wrapped value: %s", other_value)
+            self.log.info("against wrapped value: %s", other_value)
         else:
-            log.info("against bare value: %s", other_value)
-        result = self.__cmp__(other_value)
-        log.info("result: %s", result)
+            self.log.info("against bare value: %s", other_value)
+        result = self.value.__cmp__(other_value)
+        self.log.info("result: %s", result)
         return result

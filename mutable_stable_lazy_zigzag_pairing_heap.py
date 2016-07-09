@@ -43,7 +43,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
     def include_after(self, heap):
         """Include another heap, prioritized after current items."""
         self.ensure_top_promoted()
-        self.forrest.apend(heap)
+        self.forrest.append(heap)
 
     def include_before(self, heap):
         """Include another heap, prioritized before current items."""
@@ -85,7 +85,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                     former.include_after(latter)
                     new_forrest.appendleft(former)
             if self.forrest:
-                new_forrest.apendleft(self.forest.pop())
+                new_forrest.appendleft(self.forest.pop())
             self.forrest = new_forrest
             # zag
             new_forrest = deque()
@@ -101,7 +101,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                     former.include_after(latter)
                     new_forrest.append(former)
             if self.forrest:
-                new_forrest.apend(self.forest.pop())
+                new_forrest.append(self.forest.pop())
             self.forrest = new_forrest
         new_state = self.forrest.pop()
         self.top_item = new_state.top_item
