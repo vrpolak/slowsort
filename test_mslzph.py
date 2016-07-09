@@ -1,7 +1,10 @@
 import logging
+import random
 import sys
 
-from comparison_logging_wrapper import ComparisonLoggingWrapper as Wrap
+from comparison_logging_wrapper import ComparisonLoggingWrapper as Lwrap
+from comparison_counting_wrapper import ComparisonCountingWrapper as Cwrap
+from comparison_counting_wrapper import SimpleCounter as Counter
 from mutable_stable_lazy_zigzag_pairing_heap import MutableStableLazyZigzagPairingHeap as Heap
 
 # FIXME: Replace this with introspectable logger, to eye-independent tests.
@@ -20,7 +23,7 @@ def empty_check(heap, name):
 
 def wrap(value):
     """Wrap using "log" logger."""
-    return Wrap(value, log)
+    return Lwrap(value, log)
 
 one = wrap(1)
 two = wrap(2)
@@ -60,4 +63,42 @@ popped = heap.pop()
 assert popped == 1
 popped = heap.pop()
 assert popped == 2
-empty_check(heap, "12")
+empty_check(heap, "21")
+
+# Sort already sorted: N=21.
+N = 21
+heap = Heap()
+for index in range(N):
+    heap.add(index, wrap(index))
+result = []
+for index in range(N):
+    result.append(heap.pop())
+assert result == range(N)
+empty_check(heap, "s21")
+
+# Sort antisorted, N=21.
+N = 21
+heap = Heap()
+for index in range(N - 1, -1, -1):
+    heap.add(index, wrap(index))
+result = []
+for index in range(N):
+    result.append(heap.pop())
+assert result == range(N)
+empty_check(heap, "a21")
+
+# Random shuffles as I do noty feel like constructing a worst case.
+M = 100
+N = 21
+for iteration in range(M):
+    counter = Counter()
+    source = list(range(N))
+    random.shuffle(source)
+    print repr(source)
+    for index in source:
+        heap.add(index, Cwrap(index, counter))
+    result = []
+    for index in range(N):
+        result.append(heap.pop())
+    print counter.count
+    assert result == range(N)
