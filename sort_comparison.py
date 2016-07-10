@@ -4,22 +4,31 @@ import random
 from comparison_counting_wrapper import ComparisonCountingWrapper as Wrap
 from comparison_counting_wrapper import SimpleCounter as Counter
 from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sort
+from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sort
 
 M = 10000
 print "averaging over M:", M
 N = 21
 print "comparing at N:", N
-comp_sum = 0.0
-comp_sqsum = 0.0
+sorts = [mslzph_sort, miplzph_sort]
+comp_sum = {sort: 0.0 for sort in sorts}
+comp_sqsum = {sort: 0.0 for sort in sorts}
 for iteration in range(M):
-    counter = Counter()
-    source = []
-    for index in range(N):
-        source.append((index, Wrap(index, counter)))
-    random.shuffle(source)
-    result = mslzph_sort(source)
-    for index in range(N):
-        assert result[index][0] == index
-    comp_sum += counter.count
-    comp_sqsum += counter.count * counter.count
-print "mslzph:", comp_sum / M, ", sigma:", math.sqrt((M * comp_sqsum - comp_sum * comp_sum) / (M - 1)) / M
+    for sort in sorts:
+        # TODO: Do a copy.deepcopy so that sorts use the same sources.
+        counter = Counter()
+        source = []
+        for index in range(N):
+            source.append((index, Wrap(index, counter)))
+        random.shuffle(source)
+        result = mslzph_sort(source)
+        for index in range(N):
+            assert result[index][0] == index
+        comp_sum[sort] += counter.count
+        comp_sqsum[sort] += counter.count * counter.count
+summ = comp_sum[mslzph_sort]
+sqsumm = comp_sqsum[mslzph_sort]
+print "mslzph:", summ / M, ", sigma:", math.sqrt((M * sqsumm - summ * summ) / (M - 1)) / M
+summ = comp_sum[miplzph_sort]
+sqsumm = comp_sqsum[miplzph_sort]
+print "miplzph:", summ / M, ", sigma:", math.sqrt((M * sqsumm - summ * summ) / (M - 1)) / M
