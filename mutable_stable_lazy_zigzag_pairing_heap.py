@@ -18,6 +18,13 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
         self.top_item = top_item
         self.forrest = forrest or deque()
 
+    def __len__(self):
+        """Return number of stored elements."""
+        length = len(self.forrest)
+        if self.top_item:
+            length += 1
+        return length
+
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
         return (not self.forrest) and (not self.top_item)

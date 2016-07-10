@@ -7,7 +7,7 @@ from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sort
 from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sort
 from mutable_lazy_weight_linking_heap import mlwlh_sort
 
-M = 10000
+M = 100000
 print "averaging over M:", M
 N = 21
 print "comparing at N:", N
@@ -22,7 +22,7 @@ for iteration in range(M):
         for index in range(N):
             source.append((index, Wrap(index, counter)))
         random.shuffle(source)
-        result = mslzph_sort(source)
+        result = sort(source)
         for index in range(N):
             assert result[index][0] == index
         comp_sum[sort] += counter.count

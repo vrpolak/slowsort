@@ -17,7 +17,7 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         """Initialize the heap, possibly to a prepared state."""
         self.top_item = top_item
         self.forrest = forrest or queue()
-        self.weight = len(forrest)
+        self.weight = len(self.forrest)
         if self.top_item:
             self.weight += 1
 
@@ -27,7 +27,7 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
 
     def is_empty(self):
         """Return boolean corresponding to emptiness of the heap."""
-        return self.weight
+        return self.weight < 1
 
     def is_nonempty(self):
         """Return boolean corresponding to opposite of emptiness of the heap."""
@@ -80,8 +80,8 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
             return
         while len(self.forrest) > 1:
             smaller = self.forrest.pop()
-            smaper_priority = smaller.get_top_priority()
-            biger = self.forrest.pop()
+            smaller_priority = smaller.get_top_priority()
+            bigger = self.forrest.pop()
             bigger_priority = bigger.get_top_priority()
             if smaller_priority <= bigger_priority:
                 smaller.include(bigger)

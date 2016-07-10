@@ -31,7 +31,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         """In case heap has a top, demote it so merge is easier."""
         if not self.top_item:
             return
-        demoted = MutableStableLazyZigzagPairingHeap(self.top_item, self.forrest)
+        demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest)
         self.top_item = None
         self.forrest = deque([demoted])
 
@@ -39,7 +39,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         """Add item to self, prioritized after current items, do not compare yet."""
         self.ensure_top_demoted()
         item = (priority, payload)
-        heap = MutableStableLazyZigzagPairingHeap(top_item=item)
+        heap = MutableInclusionPreferringLazyZigzagPairingHeap(top_item=item)
         # Addition is not inclusion, so late items are not preferred.
         self.forrest.append(heap)
 
@@ -51,14 +51,14 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
     def get_top_priority(self):
         """Return least priority, this includes promoting top."""
         if self.is_empty():
-            raise IndexError("MutableStableLazyZigzagPairingHeap: pop when empty.")
+            raise IndexError("MutableInclusionPreferringLazyZigzagPairingHeap: pop when empty.")
         self.ensure_top_promoted()
         return self.top_item[0]
 
     def pop(self):
         """If not empty, extract the least item from self and return that."""
         if self.is_empty():
-            raise IndexError("MutableStableLazyZigzagPairingHeap: pop when empty.")
+            raise IndexError("MutableInclusionPreferringLazyZigzagPairingHeap: pop when empty.")
         self.ensure_top_promoted()
         payload = self.top_item[1]
         self.top_item = None
