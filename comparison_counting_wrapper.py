@@ -1,5 +1,7 @@
 """Module that defines a wrapper object which counts comparisons."""
 
+
+# TODO: Make sure copy.deepcopy() is supported.
 class SimpleCounter(object):
     """A simple counter to use."""
 

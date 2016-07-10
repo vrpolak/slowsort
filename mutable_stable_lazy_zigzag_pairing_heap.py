@@ -107,3 +107,16 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
         new_state = self.forrest.pop()
         self.top_item = new_state.top_item
         self.forrest = new_state.forrest
+
+
+def mslzph_sort(source):
+    """Return new list of (payload, key) pairs, sorted using the mslzp heap."""
+    heap = MutableStableLazyZigzagPairingHeap()
+    for payload, key in source:
+        heap.add(payload, key)
+    result = []
+    while heap.is_nonempty():
+        key = heap.get_top_priority()
+        payload = heap.pop()
+        result.append((payload, key))
+    return result
