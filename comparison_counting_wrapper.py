@@ -28,3 +28,9 @@ class ComparisonCountingWrapper(object):
         self.counter.count += 1
         result = self.value.__cmp__(other_value)
         return result
+
+    def __str__(self):
+        return "ComparisonCountingWrapper(" + str(self.value) + ", " + str(self.counter) + ")"
+
+    def __repr__(self):
+        return "ComparisonCountingWrapper(" + repr(self.value) + ", " + repr(self.counter) + ")"

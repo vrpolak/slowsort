@@ -24,3 +24,9 @@ class ComparisonLoggingWrapper(object):
         result = self.value.__cmp__(other_value)
         self.log.info("result: %s", result)
         return result
+
+    def __str__(self):
+        return "ComparisonLoggingWrapper(" + str(self.value) + ", " + str(self.log) + ")"
+
+    def __repr__(self):
+        return "ComparisonLoggingWrapper(" + repr(self.value) + ", " + repr(self.log) + ")"

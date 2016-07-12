@@ -36,7 +36,7 @@ def binary_insert(element, target, lower_index, upper_index):
         return binary_insert(element, target, critical_index, upper_index)
 
 
-def ford_johnson_sort(source):
+def ford_johnson_sort_destructive(source):
     """Form pairs and sort them according to top elements (odd element at the end).
     Binary-insert dangling elements in an order that maximizes efficiency.
 
@@ -47,17 +47,37 @@ def ford_johnson_sort(source):
     while len(source) > 1:
         former = source.pop()
         latter = source.pop()
-        if former <= later:
+        if former <= latter:
             pairs.append(ComparablePayload(former, latter))
         else:
             pairs.append(ComparablePayload(latter, former))
-    ford_johnson_sort(pairs)
-    insertion_target = [pairs[0].key(), pairs[0].payload]
-    for pair in pairs[1:]:
-        insertion_target.append(pair[0])
+    pairs = ford_johnson_sort_destructive(pairs)
+    insertion_target = [pairs[0].key, pairs[0].payload]
+    len_pairs = len(pairs)
     jacobsthal_previous = 1
     jacobsthal_current = 1
-    while 1:
+    while jacobsthal_current < len_pairs:
         jacobsthal_old = jacobsthal_previous
         jacobsthal_previous = jacobsthal_current
         jacobsthal_current = jacobsthal_previous + 2 * jacobsthal_old
+        if jacobsthal_current >= len_pairs:
+            jacobsthal_current = len_pairs
+        for pair in pairs[jacobsthal_previous:jacobsthal_current]:
+            insertion_target.append(pair.key)
+        upper_index = len(insertion_target) - 1
+        for pair in pairs[jacobsthal_current - 1:jacobsthal_previous - 1:-1]:
+            anchor = pair.key
+            dangler = pair.payload
+            while insertion_target[upper_index] is not anchor:
+                upper_index -= 1
+                assert upper_index >= 0
+            insertion_target = binary_insert(dangler, insertion_target, -1, upper_index)
+    if len(source):
+        odd = source.pop()
+        insertion_target = binary_insert(odd, insertion_target, -1, len(insertion_target))
+    return insertion_target
+
+
+def ford_johnson_sort(source):
+    """Copy iterable source to a list and apply destructive sort. Return the result."""
+    return ford_johnson_sort_destructive(list(source))
