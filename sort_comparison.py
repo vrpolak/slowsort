@@ -7,9 +7,9 @@ from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sort
 from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sort
 from mutable_lazy_weight_linking_heap import mlwlh_sort
 
-M = 100000
+M = 1000
 print "averaging over M:", M
-N = 21
+N = 1000
 print "comparing at N:", N
 sorts = [mslzph_sort, miplzph_sort, mlwlh_sort]
 comp_sum = {sort: 0.0 for sort in sorts}
