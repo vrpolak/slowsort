@@ -30,7 +30,7 @@ class ComparisonCountingWrapper(object):
         return result
 
     def __str__(self):
-        return "ComparisonCountingWrapper(" + str(self.value) + ", " + str(self.counter) + ")"
+        return "ComparisonCountingWrapper(" + str(self.value) + ")"
 
     def __repr__(self):
         return "ComparisonCountingWrapper(" + repr(self.value) + ", " + repr(self.counter) + ")"

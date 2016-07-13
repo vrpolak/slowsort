@@ -26,7 +26,7 @@ class ComparisonLoggingWrapper(object):
         return result
 
     def __str__(self):
-        return "ComparisonLoggingWrapper(" + str(self.value) + ", " + str(self.log) + ")"
+        return "ComparisonLoggingWrapper(" + str(self.value) + ")"
 
     def __repr__(self):
         return "ComparisonLoggingWrapper(" + repr(self.value) + ", " + repr(self.log) + ")"

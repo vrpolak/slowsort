@@ -16,39 +16,53 @@ def wrap(value):
     """Wrap using "log" logger."""
     return Lwrap(value, log)
 
+def list_str(iterable):
+    """PEP 3140"""
+    return str([str(item) for item in iterable])
+
 def visual_test(integer_list):
     """Basic test logic for test which use wrappers to log comparisons."""
     source = map(wrap, integer_list)
-    result = sort(source[:])
-    sorted_source = sorted(source)
-    if not result == sorted_source:
-        msg = "result: " + str(result) + ", source: " + str(sorted_source)
+    result = sort(source)
+    unwrap = [item.value for item in result]
+    sorted_integer_list = sorted(list(integer_list))
+    if not unwrap == sorted_integer_list:
+        msg = "result: " + list_str(unwrap) + ", sorted source: " + list_str(sorted_integer_list)
         raise AssertionError(msg)
 
 # Sort empty, no log seen.
+print "empty"
 visual_test([])
 
 # Sort single, no log seen.
+print "single"
 visual_test([0])
 
 # Sort sorted pair, see one comparison.
+print "sorted pair"
 visual_test([0, 1])
 
 # Sort anti-sorted pair, see one comparison.
+print "antisorted pair"
 visual_test([1, 0])
 
 # Sort already sorted: N=21.
-visual_test(range(21))
+print "sorted 21"
+visual_test(list(range(21)))
 
 # Sort antisorted, N=21.
-visual_test(range(21).reverse())
+print "antisorted 21"
+source = list(range(21))
+source.reverse()
+visual_test(source)
 
 # Random shuffles as I do not feel like constructing a worst case.
+print "random M N tests"
 M = 100
 N = 21
 for iteration in range(M):
     counter = Counter()
-    source = range(N)
+    source = list(range(N))
     random.shuffle(source)
     print repr(source)
     wrapped = []
