@@ -2,6 +2,7 @@ import logging
 import random
 import sys
 
+from pep_3140 import list_str
 from comparison_logging_wrapper import ComparisonLoggingWrapper as Lwrap
 from comparison_counting_wrapper import ComparisonCountingWrapper as Cwrap
 from comparison_counting_wrapper import SimpleCounter as Counter
@@ -15,10 +16,6 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 def wrap(value):
     """Wrap using "log" logger."""
     return Lwrap(value, log)
-
-def list_str(iterable):
-    """PEP 3140"""
-    return str([str(item) for item in iterable])
 
 def visual_test(integer_list):
     """Basic test logic for test which use wrappers to log comparisons."""
@@ -74,3 +71,12 @@ for iteration in range(M):
         unwrapped.append(item.value)
     print counter.count
     assert unwrapped == range(N)
+
+# Increasingly long shuffles on unwrapped integers, to check correctness.
+print "random 1..M tests"
+M = 2000
+for N in range(M):
+    source = list(range(N))
+    random.shuffle(source)
+    result = sort(source)
+    assert result == range(N)
