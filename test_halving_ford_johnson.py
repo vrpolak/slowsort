@@ -6,7 +6,7 @@ from pep_3140 import list_str
 from comparison_logging_wrapper import ComparisonLoggingWrapper as Lwrap
 from comparison_counting_wrapper import ComparisonCountingWrapper as Cwrap
 from comparison_counting_wrapper import SimpleCounter as Counter
-from ford_johnson_sort import ford_johnson_sort as sort
+from halving_ford_johnson_sort import halving_ford_johnson_sort as sort
 
 # FIXME: Replace this with introspectable logger, to eye-independent tests.
 log = logging.getLogger("logging_test")

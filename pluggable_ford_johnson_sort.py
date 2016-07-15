@@ -1,50 +1,11 @@
-"""Module that defines Ford-Johnson sortin algorithm."""
+"""Module that defines Ford-Johnson sorting algorithm with pluggable details."""
 
 
 from pep_3140 import list_str
+from comparable_payload import ComparablePayload
 
 
-class ComparablePayload(object):
-    """Pair of key and payload, comparable by key. Can be used to store sorted pairs."""
-
-    def __init__(self, key, payload):
-        self.key = key
-        self.payload = payload
-
-    def __cmp__(self, other):
-        return self.key.__cmp__(other.key)
-
-    def __str__(self):
-        return "ComparablePayload(" + str(self.key) + ")"
-
-    def __repr__(self):
-        return "ComparablePayload(" + repr(self.key) + ", " + repr(self.payload) + ")"
-
-
-def binary_insert(element, target, lower_index, upper_index):
-    """Insert element into target list.
-    Lower index is confirmed to be before, can be -1;
-    Upper index is confirmed to be after, can be len(target)."""
-    window_size = upper_index - lower_index
-    assert window_size > 0, "Binary insert encountered non-positive window size."
-    if window_size <= 1:
-        if lower_index < 0:
-            result = [element]
-            result.extend(target)
-            return result
-        result = target[:lower_index + 1]
-        result.append(element)
-        if upper_index < len(target):
-            result.extend(target[upper_index:])
-        return result
-    critical_index = lower_index + window_size / 2
-    if element < target[critical_index]:
-        return binary_insert(element, target, lower_index, critical_index)
-    else:
-        return binary_insert(element, target, critical_index, upper_index)
-
-
-def ford_johnson_sort_destructive(source):
+def pluggable_ford_johnson_sort_destructive(binary_insert, source):
     """Form pairs and sort them according to top elements (odd element at the end).
     Binary-insert dangling elements in an order that maximizes efficiency.
 
@@ -59,7 +20,7 @@ def ford_johnson_sort_destructive(source):
             pairs.append(ComparablePayload(former, latter))
         else:
             pairs.append(ComparablePayload(latter, former))
-    pairs = ford_johnson_sort_destructive(pairs)
+    pairs = pluggable_ford_johnson_sort_destructive(binary_insert, pairs)
     len_pairs = len(pairs)
     # Additional index value is needed for localizing anchors.
     first_item = ComparablePayload(pairs[0].payload, 0)
@@ -103,16 +64,3 @@ def ford_johnson_sort_destructive(source):
         insertion_target = binary_insert(odd, insertion_target, -1, len(insertion_target))
     # print "sorted", [str(item) for item in insertion_target]  # PEP 3140
     return insertion_target
-
-
-def ford_johnson_sort(source):
-    """Copy iterable source to a list and apply destructive sort. Return the result."""
-    return ford_johnson_sort_destructive(list(source))
-
-
-def ford_johnson_sort_tuples(source):
-    """Adapter for sorting tuples by [1] element."""
-    cp_source = [ComparablePayload(item[1], item) for item in source]
-    cp_result = ford_johnson_sort(cp_source)
-    result = [item.payload for item in cp_result]
-    return result

@@ -8,7 +8,7 @@ from comparison_counting_wrapper import SimpleCounter as Counter
 from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sort
 from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sort
 from mutable_lazy_weight_linking_heap import mlwlh_sort
-from ford_johnson_sort import ford_johnson_sort_tuples as fj_sort
+from halving_ford_johnson_sort import halving_ford_johnson_sort_tuples as hfj_sort
 
 # FIXME: Rework sorts to follow the same protocol so that adapters are not needed as much.
 
@@ -43,7 +43,7 @@ print "averaging over M:", M
 N = 1000
 print "comparing at N:", N
 
-sort_test(fj_sort, N, M, "fj")
+sort_test(hfj_sort, N, M, "hfj")
 
 sort_test(mlwlh_sort, N, M, "mlwlh")
 
