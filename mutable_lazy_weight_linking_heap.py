@@ -51,7 +51,7 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         self.weight += 1
 
     def include(self, heap):
-        """Include another heap, no comparisons other tha to top, which is assumed to be done already."""
+        """Include another heap, no comparisons other than to top, which is assumed to be done already."""
         self.ensure_top_promoted()
         len_heap = len(heap)
         self.forrest.add(heap, len_heap)

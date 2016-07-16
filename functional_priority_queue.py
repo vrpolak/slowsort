@@ -23,5 +23,5 @@ class FunctionalPriorityQueue(object):
         raise NotImplementedError
 
     def pop(self):
-        """If not empty, return tuple of the least item and the smaller queue."""
+        """If not empty, return tuple of the smaller queue and the least item."""
         raise NotImplementedError
