@@ -1,6 +1,6 @@
 """Module that defines functional stable zigzag pairing heap."""
 
-from collections import deque
+from pep_3140 import Deque
 from functional_priority_queue import FunctionalPriorityQueue
 
 class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
@@ -12,12 +12,12 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
 
-    This implementation uses deque to store ordered collection of sub-heaps."""
+    This implementation uses Deque to store ordered collection of sub-heaps."""
 
     def __init__(self, top_item=None, forrest=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest or deque()
+        self.forrest = forrest or Deque()
 
     def __len__(self):
         """Return number of stored elements."""
@@ -39,7 +39,7 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
         if not self.top_item:
             return self
         demoted = FunctionalStableLazyZigzagPairingHeap(self.top_item, self.forrest)
-        return FunctionalStableLazyZigzagPairingHeap(None, deque[demoted])
+        return FunctionalStableLazyZigzagPairingHeap(None, Deque[demoted])
 
     def add(self, payload, priority):
         """Add item to self, prioritized after current items, do not compare yet."""
@@ -81,10 +81,10 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
         if self.top_item or not self.forrest:
             return self
-        popping_forrest = deque(self.forrest)
+        popping_forrest = Deque(self.forrest)
         while len(popping_forrest) > 1:
             # zig
-            new_forrest = deque()
+            new_forrest = Deque()
             while len(popping_forrest) > 1:
                 latter = popping_forrest.pop()
                 latter, latter_priority = latter.get_top_priority()
@@ -98,7 +98,7 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
                 new_forrest.appendleft(popping_forrest.pop())
             popping_forrest = new_forrest
             # zag
-            new_forrest = deque()
+            new_forrest = Deque()
             while len(popping_forrest) > 1:
                 former = popping_forrest.popleft()
                 former, former_priority = former.get_top_priority()

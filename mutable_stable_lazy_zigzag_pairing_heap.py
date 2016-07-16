@@ -1,6 +1,6 @@
 """Module that defines mutable stable zigzag pairing heap."""
 
-from collections import deque
+from pep_3140 import Deque
 from mutable_priority_queue import MutablePriorityQueue
 
 class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
@@ -11,12 +11,12 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
 
-    This implementation uses deque to store ordered collection of sub-heaps."""
+    This implementation uses Deque to store ordered collection of sub-heaps."""
 
     def __init__(self, top_item=None, forrest=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest or deque()
+        self.forrest = forrest or Deque()
 
     def __len__(self):
         """Return number of stored elements."""
@@ -39,7 +39,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
             return
         demoted = MutableStableLazyZigzagPairingHeap(self.top_item, self.forrest)
         self.top_item = None
-        self.forrest = deque([demoted])
+        self.forrest = Deque([demoted])
 
     def add(self, payload, priority):
         """Add item to self, prioritized after current items, do not compare yet."""
@@ -80,7 +80,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
             return
         while len(self.forrest) > 1:
             # zig
-            new_forrest = deque()
+            new_forrest = Deque()
             while len(self.forrest) > 1:
                 latter = self.forrest.pop()
                 latter_priority = latter.get_top_priority()
@@ -96,7 +96,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                 new_forrest.appendleft(self.forrest.pop())
             self.forrest = new_forrest
             # zag
-            new_forrest = deque()
+            new_forrest = Deque()
             while len(self.forrest) > 1:
                 former = self.forrest.popleft()
                 former_priority = former.get_top_priority()

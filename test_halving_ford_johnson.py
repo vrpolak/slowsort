@@ -2,7 +2,7 @@ import logging
 import random
 import sys
 
-from pep_3140 import list_str
+from pep_3140 import List
 from comparison_logging_wrapper import ComparisonLoggingWrapper as Lwrap
 from comparison_counting_wrapper import ComparisonCountingWrapper as Cwrap
 from comparison_counting_wrapper import SimpleCounter as Counter
@@ -24,7 +24,7 @@ def visual_test(integer_list):
     unwrap = [item.value for item in result]
     sorted_integer_list = sorted(list(integer_list))
     if not unwrap == sorted_integer_list:
-        msg = "result: " + list_str(unwrap) + ", sorted source: " + list_str(sorted_integer_list)
+        msg = "result: " + str(List(unwrap)) + ", sorted source: " + str(List(sorted_integer_list))
         raise AssertionError(msg)
 
 # Sort empty, no log seen.

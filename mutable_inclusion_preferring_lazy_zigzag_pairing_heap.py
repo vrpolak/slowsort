@@ -1,6 +1,6 @@
 """Module that defines mutable inclusion preferring zigzag pairing heap."""
 
-from collections import deque
+from pep_3140 import Deque
 from mutable_priority_queue import MutablePriorityQueue
 
 class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
@@ -12,12 +12,12 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
     Zigzag: The odd sub-heap is left at alternating ends.
     This heap does NOT result in stable sort algorithm.
 
-    This implementation uses deque to store ordered collection of sub-heaps."""
+    This implementation uses Deque to store ordered collection of sub-heaps."""
 
     def __init__(self, top_item=None, forrest=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest or deque()
+        self.forrest = forrest or Deque()
 
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
@@ -33,7 +33,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
             return
         demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest)
         self.top_item = None
-        self.forrest = deque([demoted])
+        self.forrest = Deque([demoted])
 
     def add(self, payload, priority):
         """Add item to self, prioritized after current items, do not compare yet."""
@@ -70,7 +70,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
             return
         while len(self.forrest) > 1:
             # zig
-            new_forrest = deque()
+            new_forrest = Deque()
             while len(self.forrest) > 1:
                 latter = self.forrest.pop()
                 latter_priority = latter.get_top_priority()
@@ -86,7 +86,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
                 new_forrest.appendleft(self.forrest.pop())
             self.forrest = new_forrest
             # zag
-            new_forrest = deque()
+            new_forrest = Deque()
             while len(self.forrest) > 1:
                 former = self.forrest.popleft()
                 former_priority = former.get_top_priority()
