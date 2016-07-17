@@ -26,7 +26,7 @@ def sorted_using_mutable_unstable_heap(heap_class, source):
     return sorted_using_mutable_stable_heap(heap_class, source)
 
 
-def sorted_using_functional_unstable_heap
+def sorted_using_functional_stable_heap(heap_class, source):
     """Put items in heap, create List py popping them."""
     heap = heap_class()
     for item in source:
@@ -39,6 +39,6 @@ def sorted_using_functional_unstable_heap
 
 
 @stabilize_sorted
-def sorted_using_functional_stable_heap
+def sorted_using_functional_unstable_heap(heap_class, source):
     """Stabilized unstable sorted using functional heap class."""
     return sorted_using_functional_stable_heap(heap_class, source)

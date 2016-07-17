@@ -14,12 +14,13 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
 
-    This implementation uses Deque to store ordered collection of sub-heaps."""
+    This implementation uses Deque to store ordered collection of sub-heaps.
+    Note that Deque is mutable."""
 
     def __init__(self, top_item=None, forrest=None, known_length=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest if forrest is None else Deque()
+        self.forrest = forrest if forrest is not None else Deque()
         if known_length is not None:
             self.length = known_length
         else:
@@ -84,16 +85,17 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
 
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade and return."""
-        if (self.top_item is None) or (not self.forrest):
+        if (self.top_item is not None) or (not self.forrest):
             return self
         popping_forrest = Deque(self.forrest)
         while len(popping_forrest) > 1:
             # zig
             new_forrest = Deque()
             while len(popping_forrest) > 1:
-                latter = popping_forrest.pop()
-                former = popping_forrest.pop()
-                if latter < former:
+                # Sub-heaps should always be promoted, but better safe state then be then sorry.
+                latter, latter_top = popping_forrest.pop().peek()
+                former, former_top = popping_forrest.pop().peek()
+                if latter_top < former_top:
                     new_forrest.appendleft(latter.include_before(former))
                 else:
                     new_forrest.appendleft(former.include_after(latter))
@@ -103,9 +105,9 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
             # zag
             new_forrest = Deque()
             while len(popping_forrest) > 1:
-                former = popping_forrest.popleft()
-                latter = popping_forrest.popleft()
-                if latter < former:
+                former, former_top = popping_forrest.popleft().peek()
+                latter, latter_top = popping_forrest.popleft().peek()
+                if latter_top < former_top:
                     new_forrest.append(latter.include_before(former))
                 else:
                     new_forrest.append(former.include_after(latter))
