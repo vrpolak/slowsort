@@ -1,6 +1,8 @@
 """Module that defines mutable inclusion preferring zigzag pairing heap."""
 
 from pep_3140 import Deque
+from pep_3140 import List
+from sorted_using_heap import sorted_using_mutable_unstable_heap
 from mutable_priority_queue import MutablePriorityQueue
 
 class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
@@ -21,7 +23,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
 
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
-        return (not self.forrest) and (not self.top_item)
+        return (self.top_item is None) and (not self.forrest)
 
     def is_nonempty(self):
         """Return boolean corresponding to opposite of emptiness of the queue."""
@@ -29,16 +31,15 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
 
     def ensure_top_demoted(self):
         """In case heap has a top, demote it so merge is easier."""
-        if not self.top_item:
+        if self.top_item is not None:
             return
         demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest)
         self.top_item = None
         self.forrest = Deque([demoted])
 
-    def add(self, payload, priority):
+    def add(self, item):
         """Add item to self, prioritized after current items, do not compare yet."""
         self.ensure_top_demoted()
-        item = (priority, payload)
         heap = MutableInclusionPreferringLazyZigzagPairingHeap(top_item=item)
         # Addition is not inclusion, so late items are not preferred.
         self.forrest.append(heap)
@@ -48,35 +49,33 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         self.ensure_top_promoted()
         self.forrest.appendleft(heap)
 
-    def get_top_priority(self):
-        """Return least priority, this includes promoting top."""
+    def peek(self):
+        """Return least priority item, this includes promoting top, but not extraction."""
         if self.is_empty():
-            raise IndexError("MutableInclusionPreferringLazyZigzagPairingHeap: pop when empty.")
+            raise IndexError("MutableInclusionPreferringLazyZigzagPairingHeap: peek when empty.")
         self.ensure_top_promoted()
-        return self.top_item[0]
+        return self.top_item
 
     def pop(self):
         """If not empty, extract the least item from self and return that."""
         if self.is_empty():
             raise IndexError("MutableInclusionPreferringLazyZigzagPairingHeap: pop when empty.")
         self.ensure_top_promoted()
-        payload = self.top_item[1]
+        item = self.top_item
         self.top_item = None
-        return payload
+        return item
 
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
-        if self.top_item or not self.forrest:
+        if (self.top_item is not None) or (not self.forrest):
             return
         while len(self.forrest) > 1:
             # zig
             new_forrest = Deque()
             while len(self.forrest) > 1:
                 latter = self.forrest.pop()
-                latter_priority = latter.get_top_priority()
                 former = self.forrest.pop()
-                former_priority = former.get_top_priority()
-                if latter_priority < former_priority:
+                if latter.peek() < former.peek():
                     latter.include_before(former)
                     new_forrest.appendleft(latter)
                 else:
@@ -89,10 +88,8 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
             new_forrest = Deque()
             while len(self.forrest) > 1:
                 former = self.forrest.popleft()
-                former_priority = former.get_top_priority()
                 latter = self.forrest.popleft()
-                latter_priority = latter.get_top_priority()
-                if latter_priority < former_priority:
+                if latter.peek() < former.peek():
                     latter.include_before(former)
                     new_forrest.append(latter)
                 else:
@@ -106,14 +103,6 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         self.forrest = new_state.forrest
 
 
-def miplzph_sort(source):
-    """Return new list of (payload, key) pairs, sorted using the mslzp heap."""
-    heap = MutableInclusionPreferringLazyZigzagPairingHeap()
-    for payload, key in source:
-        heap.add(payload, key)
-    result = []
-    while heap.is_nonempty():
-        key = heap.get_top_priority()
-        payload = heap.pop()
-        result.append((payload, key))
-    return result
+def miplzph_sorted(source):
+    """Return new list of items, sorted using the mslzp heap."""
+    return sorted_using_mutable_unstable_heap(MutableInclusionPreferringLazyZigzagPairingHeap, source)

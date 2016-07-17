@@ -12,6 +12,6 @@ def halving_pivot(lower_index, upper_index):
     return lower_index + spread / 2
 
 
-def halving_binary_insert(element, target, lower_index, upper_index):
+def mutating_halving_binary_insert(element, target, lower_index, upper_index):
     """Binary insertion using halving_pilot plugged to pluggable_binary_insert."""
-    return pluggable_binary_insert(halving_pivot, element, target, lower_index, upper_index)
+    mutating_pluggable_binary_insert(halving_pivot, element, target, lower_index, upper_index)

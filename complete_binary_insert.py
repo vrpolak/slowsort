@@ -31,6 +31,6 @@ def complete_pivot(lower_index, upper_index):
         return lower_index + lesser_half
 
 
-def complete_binary_insert(element, target, lower_index, upper_index):
+def mutating_complete_binary_insert(element, target, lower_index, upper_index):
     """Binary insertion using complete_pilot plugged to pluggable_binary_insert."""
-    return pluggable_binary_insert(complete_pivot, element, target, lower_index, upper_index)
+    mutating_pluggable_binary_insert(complete_pivot, element, target, lower_index, upper_index)
