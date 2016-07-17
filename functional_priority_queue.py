@@ -10,6 +10,9 @@ class FunctionalPriorityQueue(object):
         """Initialize an empty queue."""
         raise NotImplementedError
 
+    def __len__(self):
+        """Return number of items stored."""
+
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
         raise NotImplementedError

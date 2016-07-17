@@ -21,13 +21,14 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
     def __init__(self, top_item=None, forrest=None, known_weight=None):
         """Initialize the heap, possibly to a prepared state."""
         self.top_item = top_item
-        self.forrest = forrest or queue()
-        if not forrest:
-            self.weight = 0 if top_item is None else 1
+        self.forrest = forrest if forrest is not None else queue()
+        # It is not called known_length as there may be different weight algorithms in future.
+        if known_weight is not None:
+            self.weight = known_weight
             return
-        if known_weight is None:
+        if forrest:
             raise NotImplementedError("Implement iteration over MutableStableLazyZigzagPairingHeap which does not change its state.")
-        self.weight = known_weight
+        self.weight = 0 if top_item is None else 1
 
     def __len__(self):
         """Return number of items stored."""
@@ -39,7 +40,7 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
 
     def is_nonempty(self):
         """Return boolean corresponding to opposite of emptiness of the heap."""
-        return self.weight >= 1
+        return self.weight > 0
 
     def ensure_top_demoted(self):
         """In case heap has a top, demote it so merge is easier."""

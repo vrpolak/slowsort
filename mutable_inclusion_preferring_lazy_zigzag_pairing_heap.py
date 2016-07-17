@@ -16,24 +16,33 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
 
     This implementation uses Deque to store ordered collection of sub-heaps."""
 
-    def __init__(self, top_item=None, forrest=None):
+    def __init__(self, top_item=None, forrest=None, known_length=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest or Deque()
+        self.forrest = forrest if forrest is not None else Deque()
+        if known_length is not None:
+            self.length = known_length
+        else:
+            self.length = sum(map(len, self.forrest))
+            self.length += (self.top_item is not None)
+
+    def __len__(self):
+        """Return number of items stored."""
+        return self.length
 
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
-        return (self.top_item is None) and (not self.forrest)
+        return self.length < 1
 
     def is_nonempty(self):
         """Return boolean corresponding to opposite of emptiness of the queue."""
-        return not self.is_empty()
+        return self.length > 0
 
     def ensure_top_demoted(self):
         """In case heap has a top, demote it so merge is easier."""
         if self.top_item is not None:
             return
-        demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest)
+        demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest, self.length)
         self.top_item = None
         self.forrest = Deque([demoted])
 
@@ -43,10 +52,12 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         heap = MutableInclusionPreferringLazyZigzagPairingHeap(top_item=item)
         # Addition is not inclusion, so late items are not preferred.
         self.forrest.append(heap)
+        self.length += 1
 
     def include_before(self, heap):
         """Include another heap, prioritized before current items."""
         self.ensure_top_promoted()
+        self.length += len(heap)
         self.forrest.appendleft(heap)
 
     def peek(self):
@@ -63,6 +74,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         self.ensure_top_promoted()
         item = self.top_item
         self.top_item = None
+        self.length -= 1
         return item
 
     def ensure_top_promoted(self):
