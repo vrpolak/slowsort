@@ -10,6 +10,9 @@ class MutablePriorityQueue(object):
         """Initialize an empty queue."""
         raise NotImplementedError
 
+    def __len__(self):
+        """Return number of items stored."""
+
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
         raise NotImplementedError
@@ -18,8 +21,12 @@ class MutablePriorityQueue(object):
         """Return boolean corresponding to opposite of emptiness of the queue."""
         raise NotImplementedError
 
-    def add(self, item, priority):
+    def add(self, item):
         """Add item to self, return None."""
+        raise NotImplementedError
+
+    def peek(self):
+        """If not empty, locate the least item and return that."""
         raise NotImplementedError
 
     def pop(self):

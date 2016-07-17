@@ -1,0 +1,4 @@
+from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sorted
+from pluggable_test import suite
+
+suite(miplzph_sorted)
