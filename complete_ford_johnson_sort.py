@@ -7,6 +7,6 @@ from stabilize_sorted import stabilize_sorted
 
 
 @stabilize_sorted
-def complete_ford_johnson_sorted(source):
+def cfj_sorted(source):
     """Plug complete_binary_insert into pluggable_ford_johnson_sort_destructive."""
     return pluggable_ford_johnson_sort(mutating_complete_binary_insert, source)

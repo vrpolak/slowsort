@@ -18,7 +18,7 @@ def mutating_pluggable_binary_insert(choose_pivot, element, target, lower_index,
         return
     pivot_index = choose_pivot(lower_index, upper_index)
     if element < target[pivot_index]:
-        pluggable_binary_insert(choose_pivot, element, target, lower_index, pivot_index)
+        mutating_pluggable_binary_insert(choose_pivot, element, target, lower_index, pivot_index)
     else:
-        pluggable_binary_insert(choose_pivot, element, target, pivot_index, upper_index)
+        mutating_pluggable_binary_insert(choose_pivot, element, target, pivot_index, upper_index)
 

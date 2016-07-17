@@ -1,7 +1,7 @@
 """Module that defines binary insert operation using halving pivoting strategy."""
 
 
-from pluggable_binary_insert import pluggable_binary_insert
+from pluggable_binary_insert import mutating_pluggable_binary_insert
 
 
 def halving_pivot(lower_index, upper_index):

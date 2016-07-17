@@ -100,6 +100,6 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         self.forrest = new_state.forrest
 
 
-def mlwlh_sort(source):
+def mlwlh_sorted(source):
     """Return new list of itemss, sorted using the mslzp heap."""
     return sorted_using_mutable_unstable_heap(MutableLazyWeightLinkingHeap, source)

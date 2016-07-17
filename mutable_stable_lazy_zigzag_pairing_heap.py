@@ -18,7 +18,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
     def __init__(self, top_item=None, forrest=None, known_length=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest if forerst is not None else Deque()
+        self.forrest = forrest if forrest is not None else Deque()
         if known_length is not None:
             self.length = known_length
         else:

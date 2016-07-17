@@ -15,8 +15,9 @@ class List(list):
             return "[]"
         substr_list = []
         for item in self:
-            substr_list.append(", ").append(str(item))
-        substr_list.apend("]")
+            substr_list.append(", ")
+            substr_list.append(str(item))
+        substr_list.append("]")
         substr_list[0] = "["
         return "".join(substr_list)
 
@@ -30,8 +31,9 @@ class Tuple(tuple):
             return "()"
         substr_list = []
         for item in self:
-            substr_list.append(", ").append(str(item))
-        substr_list.apend(")")
+            substr_list.append(", ")
+            substr_list.append(str(item))
+        substr_list.append(")")
         substr_list[0] = "("
         return "".join(substr_list)
 
@@ -45,8 +47,11 @@ class Dict(dict):
             return "{}"
         substr_list = []
         for key, value in self.items():
-            substr_list.append(", ").append(str(key)).append(": ").append(str(value))
-        substr_list.apend("}")
+            substr_list.append(", ")
+            substr_list.append(str(key))
+            substr_list.append(": ")
+            substr_list.append(str(value))
+        substr_list.append("}")
         substr_list[0] = "{"
         return "".join(substr_list)
 

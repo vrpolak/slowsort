@@ -40,7 +40,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
 
     def ensure_top_demoted(self):
         """In case heap has a top, demote it so merge is easier."""
-        if self.top_item is not None:
+        if self.top_item is None:
             return
         demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest, self.length)
         self.top_item = None

@@ -7,6 +7,6 @@ from stabilize_sorted import stabilize_sorted
 
 
 @stabilize_sorted
-def halving_ford_johnson_sorted(source):
+def hfj_sorted(source):
     """Plug halving_binary_insert into pluggable_ford_johnson_sort."""
     return pluggable_ford_johnson_sort(mutating_halving_binary_insert, source)

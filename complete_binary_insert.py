@@ -1,7 +1,7 @@
 """Module that defines binary insert operation using complete pivoting strategy."""
 
 
-from pluggable_binary_insert import pluggable_binary_insert
+from pluggable_binary_insert import mutating_pluggable_binary_insert
 
 
 def complete_pivot(lower_index, upper_index):
