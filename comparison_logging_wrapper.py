@@ -1,5 +1,14 @@
-"""Module that defines a wrapper object which logs comparisons."""
+"""Module that defines a wrapper object which logs comparisons.
 
+This uses functools to generate rich comparison functions.
+Equivalence test does not log as sorts never do equal test directly,
+and with that every comparison logs exactly once."""
+
+
+from functools import total_ordering
+
+
+@total_ordering
 class ComparisonLoggingWrapper(object):
     """A wrapper for values which logs comparison operations"""
 
@@ -8,25 +17,22 @@ class ComparisonLoggingWrapper(object):
         self.value = value
         self.log = log
 
-    def __cmp__(self, other):
-        """Compare and log."""
-        self.log.info("Called comparison on wrapped value: %s", self.value)
-        try:
-            other_value = other.value
-            wrapped = True
-        except AttributeError:
-            other_value = other
-            wrapped = False
-        if wrapped:
-            self.log.info("against wrapped value: %s", other_value)
-        else:
-            self.log.info("against bare value: %s", other_value)
-        result = self.value.__cmp__(other_value)
+    def __eq__(self, other):
+        """Equality test, NOT logging."""
+        return self.value == other.value
+
+    def __lt__(self, other):
+        """Less-than test, logging result."""
+        self.log.info("Called less-than on wrapped value: %s", self.value)
+        self.log.info("against wrapped value: %s", other.value)
+        result = (self.value < other.value)
         self.log.info("result: %s", result)
         return result
 
     def __str__(self):
+        """Return class name followed by string value in parentheses."""
         return "ComparisonLoggingWrapper(" + str(self.value) + ")"
 
     def __repr__(self):
+        """Return constructor-like string."""
         return "ComparisonLoggingWrapper(" + repr(self.value) + ", " + repr(self.log) + ")"

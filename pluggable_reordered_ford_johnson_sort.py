@@ -4,7 +4,6 @@
 from pep_3140 import Deque
 from pep_3140 import List
 from comparable_payload import ComparablePayload
-from functional_stable_lazy_zigzag_pairing_heap_sort import fslzph_sorted
 
 
 def pluggable_reordered_ford_johnson_sort(mutating_insert, original_source):
@@ -36,30 +35,32 @@ def pluggable_reordered_ford_johnson_sort(mutating_insert, original_source):
     indexed_target = List([first_item, second_item])
     danglers = List([None])  # to align indexes
     # pairs[].key could be re-used for danglers, byt that would be more error-prone.
-    for index, pair in enumerate(pairs)[1:]:
+    for index, pair in list(enumerate(pairs))[1:]:
         # Nonzero index means that item dangling under anchor was not inserted yet.
         indexed_target.append(ComparablePayload(pair.key, index))
         danglers.append(pair.payload)
     efficiency_list = List()
     for index in range(2, len_original_source):
         bits = len(bin(index)) - 2
-        efficiency_list.append(ComparablePayload(-1.0 * (index + 1) / (1 << bits)), index)
-    efficiency_list = fslzph_sorted(efficiency_list)
-    for _ in range(len_original_source - len_indexed_target):
+        efficiency_list.append(ComparablePayload(-1.0 * (index + 1) / (1 << bits), index))
+    efficiency_list = sorted(efficiency_list)
+    for _ in range(len_original_source - len(indexed_target)):
         len_target = len(indexed_target)
         for efficiency_item in efficiency_list:
             anchor_index = efficiency_item.payload
             if anchor_index < len_target:
-                anchor = insert_target[anchor_index]
+                anchor = indexed_target[anchor_index]
                 dangler_index = anchor.payload
                 if dangler_index > 0:
                     anchor.payload = 0
-                    mutating_insert(ComparablePayload(danglers[dangler_index], 0), indexed_target, -1, len_target)
+                    # print "inserting dangler at efficiency", efficiency_item.key, "at index", anchor_index, "for source size", len_original_source
+                    mutating_insert(ComparablePayload(danglers[dangler_index], 0), indexed_target, -1, anchor_index)
                     break
-            else if anchor_index == len_target
+            elif anchor_index == len_target:
                 if odd_item is not None:
+                    # print "inserting odd at efficiency", efficiency_item.key, "at index", anchor_index, "for source size", len_original_source
                     mutating_insert(ComparablePayload(odd_item, 0), indexed_target, -1, len_target)
                     odd_item = None
                     break
-    assert len(insert_target) == len_original_source
+    assert len(indexed_target) == len_original_source
     return List([item.key for item in indexed_target])
