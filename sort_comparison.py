@@ -14,32 +14,31 @@ from halving_ford_johnson_sort import hfj_sorted
 from complete_ford_johnson_sort import cfj_sorted
 from reordered_ford_johnson_sort import rfj_sorted
 
-# FIXME: Rework sorts to follow the same protocol so that adapters are not needed as much.
 
-def sort_test(tested_sort, N, M, name):
-    """Common logic for testing one algorithm."""
+def sort_test_core(tested_sort, N, summ, sqsumm, time_total):
+    """Run one sort, assert, return updated counters."""
+    # TODO: Bring back longest.
+    counter = SimpleCounter()
+    source = List([ComparisonCountingWrapper(index, counter) for index in range(N)])
+    random.shuffle(source)
+    time_start = time.time()
+    result = List([item.value for item in tested_sort(source)])
+    time_stop = time.time()
+    assert result == List(range(N)), str(result)
+    return summ + counter.count, sqsumm + counter.count * counter.count, time_total + (time_stop - time_start)
+
+
+def sort_test(tested_sort, N, M, name, seed=42):
+    """Test one algorithm at one length multiple times."""
+    random.seed(seed)
     print "testing", name, "averaging over M:", M, "...",
     sys.stdout.flush()
-    time_start = time.time()
-    state = random.getstate()
     comp_sum = 0.0
     comp_sqsum = 0.0
-    longest = 0
+    time_total = 0.0
     for iteration in range(M):
-        counter = SimpleCounter()
-        source = List([ComparisonCountingWrapper(index, counter) for index in range(N)])
-        random.shuffle(source)
-        result = List([item.value for item in tested_sort(source)])
-        assert result == List(range(N)), str(result)
-        if counter.count > longest:
-            longest = counter.count
-        comp_sum += counter.count
-        comp_sqsum += counter.count * counter.count
-    random.setstate(state)
-    time_stop = time.time()
-    print ":", "longest:", longest, "avg:", comp_sum / M, "sigma:", math.sqrt((M * comp_sqsum - comp_sum * comp_sum) / (M - 1)) / M, "time", time_stop - time_start
-
-random.seed(42)
+        comp_sum, comp_sqsum, time_total = sort_test_core(tested_sort, N, comp_sum, comp_sqsum, time_total)
+    print ":", "avg:", comp_sum / M, "sigma:", math.sqrt((M * comp_sqsum - comp_sum * comp_sum) / (M - 1)) / M, "time", time_total
 
 N = 1000
 print "comparing at N:", N
