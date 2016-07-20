@@ -1,4 +1,5 @@
 import math
+import operator
 import random
 import sys
 import time
@@ -15,45 +16,99 @@ from complete_ford_johnson_sort import cfj_sorted
 from reordered_ford_johnson_sort import rfj_sorted
 
 
-def sort_test_core(tested_sort, N, summ, sqsumm, time_total):
-    """Run one sort, assert, return updated counters."""
-    # TODO: Bring back longest.
-    counter = SimpleCounter()
-    source = List([ComparisonCountingWrapper(index, counter) for index in range(N)])
-    random.shuffle(source)
-    time_start = time.time()
-    result = List([item.value for item in tested_sort(source)])
-    time_stop = time.time()
-    assert result == List(range(N)), str(result)
-    return summ + counter.count, sqsumm + counter.count * counter.count, time_total + (time_stop - time_start)
+class SortAtLength(object):
+    """Class for holding information about sort test progress."""
+
+    def __init__(self, tested_sort, length):
+        """Initialize."""
+        self.sort = tested_sort
+        self.length = length
+        self.runs = 0
+        self.summ = 0.0
+        self.sqsumm = 0.0
+        self.time = 0.0
+        print '.',
+        sys.stdout.flush()
+        self.add_run()
+        self.add_run()
+
+    def add_run(self):
+        """Perform next test run and update counters."""
+        counter = SimpleCounter()
+        source = List([ComparisonCountingWrapper(index, counter) for index in range(self.length)])
+        random.seed(self.runs + 42)
+        random.shuffle(source)
+        time_start = time.time()
+        wrapped_result = self.sort(source)
+        time_stop = time.time()
+        result = List([item.value for item in wrapped_result])
+        assert result == List(range(self.length)), str(result)
+        self.summ += counter.count
+        self.sqsumm += counter.count * counter.count
+        self.time += time_stop - time_start
+        self.runs += 1
+
+    def get_average(self):
+        """Return average number of comparisons so far."""
+        return self.summ / self.runs
+
+    def get_sigma_squared(self):
+        """Return sigma describing precision of measured average."""
+        return (self.runs * self.sqsumm - self.summ * self.summ) / (self.runs - 1.5) / (self.runs * self.runs)
 
 
-def sort_test(tested_sort, N, M, name, seed=42):
-    """Test one algorithm at one length multiple times."""
-    random.seed(seed)
-    print "testing", name, "averaging over M:", M, "...",
-    sys.stdout.flush()
-    comp_sum = 0.0
-    comp_sqsum = 0.0
-    time_total = 0.0
-    for iteration in range(M):
-        comp_sum, comp_sqsum, time_total = sort_test_core(tested_sort, N, comp_sum, comp_sqsum, time_total)
-    print ":", "avg:", comp_sum / M, "sigma:", math.sqrt((M * comp_sqsum - comp_sum * comp_sum) / (M - 1)) / M, "time", time_total
+class SortOverRange(object):
+    """Class for holding information about sort test progress, range agregation part."""
 
-N = 1000
-print "comparing at N:", N
-m = 100
+    def __init__(self, tested_sort, weight, name, length_limit):
+        """Initialize."""
+        self.sort = tested_sort
+        self.weight = weight
+        self.name = name
+        self.length = length_limit
+        print "Creating base data for", name
+        self.sorts = [SortAtLength(tested_sort, length) for length in range(length_limit)]
+        print
+        self.runs = 2
+        self.time = sum([sort.time for sort in self.sorts])
 
-sort_test(rfj_sorted, N, 40 * m, "rfj")
+    def add_run(self):
+        """Perform next test run and update counters."""
+        [sort.add_run() for sort in self.sorts]
+        self.time = sum([sort.time for sort in self.sorts])
+        self.runs += 1
 
-sort_test(cfj_sorted, N, 40 * m, "cfj")
+    def get_average(self):
+        """Return average number of comparisons so far."""
+        return sum([sort.get_average() for sort in self.sorts])
 
-sort_test(hfj_sorted, N, 40 * m, "hfj")
+    def get_sigma(self):
+        """Return sigma describing precision of measured average."""
+        return math.sqrt(sum([sort.get_sigma_squared() for sort in self.sorts]))
 
-sort_test(mlwlh_sorted, N, 1 * m, "mlwlh")
+    def get_priority(self):
+        """Return numeric value indicating progress of testing."""
+        return self.time / self.weight
 
-sort_test(miplzph_sorted, N, 2 * m, "miplzph")
 
-sort_test(mslzph_sorted, N, 2 * m, "mslzph")
+sorts_input = (
+    (rfj_sorted, 20, "rfj"),
+    (cfj_sorted, 16, "cfj"),
+    (hfj_sorted, 4, "hfj"),
+    (mlwlh_sorted, 2, "mlwlh"),
+    (miplzph_sorted, 2, "miplzph"),
+    (mslzph_sorted, 2, "mslzph"),
+    (fslzph_sorted, 2, "fslzph"),
+)
 
-sort_test(fslzph_sorted, N, 2 * m, "fslzph")
+length = 257
+print "Testing on range up to", length
+sorts = [SortOverRange(item[0], item[1], item[2], length) for item in sorts_input]
+while 1:
+    sorts = sorted(sorts, key=operator.attrgetter("weight", "name"))
+    for sort in sorts:
+        print sort.name, ": average", sort.get_average(), "sigma", sort.get_sigma(), "time average", sort.time / sort.runs, "runs", sort.runs
+    sorts = sorted(sorts, key=operator.methodcaller("get_priority"))
+    print
+    print "Getting more data for", sorts[0].name
+    sorts[0].add_run()
