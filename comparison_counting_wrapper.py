@@ -1,4 +1,11 @@
-"""Module that defines a wrapper object which counts comparisons."""
+"""Module that defines a wrapper object which counts comparisons.
+
+This uses functools to generate rich comparison functions.
+Equivalence test does not increment counter, as sorts never do
+equal test directly, and with that every comparison increments counter exactly once."""
+
+
+from functools import total_ordering
 
 
 # TODO: Make sure copy.deepcopy() is supported.
@@ -9,28 +16,29 @@ class SimpleCounter(object):
         """Initialization."""
         self.count = 0
 
+
+@total_ordering
 class ComparisonCountingWrapper(object):
     """A wrapper for values which counts comparison operations"""
 
     def __init__(self, value, counter):
-        """Wrap the value using the log object."""
+        """Wrap the value using the counter object."""
         self.value = value
         self.counter = counter
 
-    def __cmp__(self, other):
-        """Compare and increment counter."""
-        try:
-            other_value = other.value
-            wrapped = True
-        except AttributeError:
-            other_value = other
-            wrapped = False
+    def __eq__(self, other):
+        """Equality test, NOT incrementing counter."""
+        return self.value == other.value
+
+    def __lt__(self, other):
+        """Less-than test, incrementing counter."""
         self.counter.count += 1
-        result = self.value.__cmp__(other_value)
-        return result
+        return self.value < other.value
 
     def __str__(self):
+        """Return class name followed by string value in parentheses."""
         return "ComparisonCountingWrapper(" + str(self.value) + ")"
 
     def __repr__(self):
+        """Return constructor-like string."""
         return "ComparisonCountingWrapper(" + repr(self.value) + ", " + repr(self.counter) + ")"
