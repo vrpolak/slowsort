@@ -3,9 +3,9 @@
 from pep_3140 import Deque
 from pep_3140 import List
 from sorted_using_heap import sorted_using_functional_stable_heap
-from functional_priority_queue import FunctionalPriorityQueue
+from functional_invalidating_priority_queue import FunctionalInvalidatingPriorityQueue
 
-class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
+class FunctionalStableLazyZigzagPairingHeap(FunctionalInvalidatingPriorityQueue):
     """Heap: An implementation, usable as a queue, least priority value in, first out.
     Functional: After creation, state is never changed. Constructing modified object to return if needed.
     Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
@@ -13,6 +13,8 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     Stable: Two include methods to allow caller decide tiebreaker.
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
+
+    This heap is also Invalidating, allowing to remove multiple items according to validator.
 
     This implementation uses Deque to store ordered collection of sub-heaps.
     Note that Deque is mutable."""
@@ -116,6 +118,18 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
             popping_forrest = new_forrest
         return popping_forrest.pop()
 
+    def invalidate(self, item_is_invalid):
+        """Return new queue without items on which the argument function returns true."""
+        new_heap = FunctionalStableLazyZigzagPairingHeap()
+        if (self.top_item is not None) and (not item_is_invalid(self.top_item)):
+            new_heap.top_item = self.top_item
+            new_heap.length += 1
+        for heap in forrest:
+            invalidated = heap.invalidate(item_is_invalid)
+            if invalidated:
+                new_heap.forrest.append(invalidated)
+                new_heap.length += len(invalidated)
+        return new_heap
 
 def fslzph_sorted(source):
     """Return new list of items, sorted using the mslzp heap."""
