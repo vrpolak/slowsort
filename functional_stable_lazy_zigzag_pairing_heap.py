@@ -8,8 +8,7 @@ from functional_invalidating_priority_queue import FunctionalInvalidatingPriorit
 class FunctionalStableLazyZigzagPairingHeap(FunctionalInvalidatingPriorityQueue):
     """Heap: An implementation, usable as a queue, least priority value in, first out.
     Functional: After creation, state is never changed. Constructing modified object to return if needed.
-    Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
-    Mutable: Self is altered regularily to avoid excessive object creation.
+    Lazy: Top element is determined only upon pop or peek, in hope to get more relevant comparisons.
     Stable: Two include methods to allow caller decide tiebreaker.
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
@@ -127,7 +126,10 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalInvalidatingPriorityQueue)
         for heap in forrest:
             invalidated = heap.invalidate(item_is_invalid)
             if invalidated:
-                new_heap.forrest.append(invalidated)
+                if invalidated.top_item is not None:
+                    new_heap.forrest.append(invalidated)
+                else:
+                    new_heap.forrest.extend(invalidated.forrest)
                 new_heap.length += len(invalidated)
         return new_heap
 
