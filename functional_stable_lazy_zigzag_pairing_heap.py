@@ -92,7 +92,7 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
             # zig
             new_forrest = Deque()
             while len(popping_forrest) > 1:
-                # Sub-heaps should always be promoted, but better safe state then be then sorry.
+                # Sub-heaps should always be promoted, but better save state then be then sorry.
                 latter, latter_top = popping_forrest.pop().peek()
                 former, former_top = popping_forrest.pop().peek()
                 if latter_top < former_top:

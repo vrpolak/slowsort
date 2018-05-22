@@ -9,7 +9,7 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
     """Heap: An implementation, usable as a queue, least priority value in, first out.
     Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
     Mutable: Self is altered regularily to avoid excessive object creation.
-    Inclusion preferring: Only one inclusin method, included heap is preferred to existinmg ones.
+    Inclusion preferring: Only one inclusion method, included heap is preferred to existing ones.
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
     This heap does NOT result in stable sort algorithm.

@@ -54,7 +54,7 @@ class SortAtLength(object):
 
     def get_sigma_squared(self):
         """Return sigma describing precision of measured average."""
-        return (self.runs * self.sqsumm - self.summ * self.summ) / (self.runs - 1.5) / (self.runs * self.runs)
+        return (self.runs * self.sqsumm - self.summ * self.summ) / (self.runs - 1.8) / (self.runs * self.runs)
 
 
 class SortOverRange(object):
