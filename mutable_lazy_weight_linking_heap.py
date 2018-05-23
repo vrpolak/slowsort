@@ -1,6 +1,6 @@
 """Module that defines mutable weight linking lazy heap."""
 
-from mutable_stable_lazy_zigzag_pairing_heap import MutableStableLazyZigzagPairingHeap as queue
+from pep_3140 import List
 from comparable_payload import ComparablePayload
 from sorted_using_heap import sorted_using_mutable_unstable_heap
 from mutable_priority_queue import MutablePriorityQueue
@@ -13,7 +13,7 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
     Weight: The two heaps to link are the ones with least elements in them.
     This heap does NOT result in stable sort algorithm.
 
-    This implementation uses MutableStableLazyZigzagPairingHeap to store collection of sub-heaps.
+    This implementation uses List and sort() to store collection of sub-heaps.
 
     Sub-heaps are prioritized by their length, so item of forrest is ComparablePayload(length, sub-heap)
     Items are checked by "is None", as empty string and zero are valid items with false truth value."""
@@ -21,7 +21,7 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
     def __init__(self, top_item=None, forrest=None, known_weight=None):
         """Initialize the heap, possibly to a prepared state."""
         self.top_item = top_item
-        self.forrest = forrest if forrest is not None else queue()
+        self.forrest = forrest if forrest is not None else List()
         # It is not called known_length as there may be different weight algorithms in future.
         if known_weight is not None:
             self.weight = known_weight
@@ -49,20 +49,20 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         known_weight = self.weight
         demoted = MutableLazyWeightLinkingHeap(self.top_item, self.forrest, known_weight)
         self.top_item = None
-        self.forrest = queue().add(ComparablePayload(known_weight, demoted))
+        self.forrest = List([ComparablePayload(known_weight, demoted)])
 
     def add(self, item):
         """Add item to self, do not compare yet."""
         self.ensure_top_demoted()
         singleton_heap = MutableLazyWeightLinkingHeap(top_item=item)
-        self.forrest.add(ComparablePayload(1, singleton_heap))
+        self.forrest.append(ComparablePayload(1, singleton_heap))
         self.weight += 1
 
     def include(self, heap):
         """Include another heap, no comparisons other than to top, which is assumed to be done already."""
         self.ensure_top_promoted()
         weight = len(heap)
-        self.forrest.add(ComparablePayload(weight, heap))
+        self.forrest.append(ComparablePayload(weight, heap))
         self.weight += weight
 
     def peek(self):
@@ -86,16 +86,20 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
         if (self.top_item is not None) or (not self.forrest):
             return
+        self.forrest.sort()
         while len(self.forrest) > 1:
-            smaller = self.forrest.pop().payload
-            bigger = self.forrest.pop().payload
+            smaller = self.forrest[0].payload
+            bigger = self.forrest[1].payload
             if smaller.peek() <= bigger.peek():
                 smaller.include(bigger)
-                self.forrest.add(ComparablePayload(len(smaller), smaller))
+                self.forrest[:2] = []
+                self.forrest.append(ComparablePayload(len(smaller), smaller))
             else:
                 bigger.include(smaller)
-                self.forrest.add(ComparablePayload(len(bigger), bigger))
-        new_state = self.forrest.pop().payload
+                self.forrest[:2] = []
+                self.forrest.append(ComparablePayload(len(bigger), bigger))
+            self.forrest.sort()
+        new_state = self.forrest[0].payload
         self.top_item = new_state.top_item
         self.forrest = new_state.forrest
 
