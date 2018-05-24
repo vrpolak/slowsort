@@ -1,6 +1,5 @@
 """Module that defines Ford-Johnson sorting algorithm with pluggable details."""
 
-
 from pep_3140 import Deque
 from pep_3140 import List
 from comparable_payload import ComparablePayload
@@ -12,7 +11,8 @@ def pluggable_ford_johnson_sort(mutating_insert, original_source):
 
     Original_source should be iterable supporting len() and element should support comparison.
     Returned value is either the original, or a new List.
-    This sort is functional, in sense it does not modify original source."""
+    This sort is functional, in sense it does not modify original source.
+    """
     if len(original_source) < 2:
         return original_source
     source = Deque(original_source)

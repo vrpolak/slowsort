@@ -1,11 +1,11 @@
 """Module that defines binary insert operation using halving pivoting strategy."""
 
-
 from pluggable_binary_insert import mutating_pluggable_binary_insert
 
 
 def halving_pivot(lower_index, upper_index):
     """Return index strictly between bondaries.
+
     Choose the exact middle, of lower of two most middle indexes."""
     spread = upper_index - lower_index
     assert spread >= 2

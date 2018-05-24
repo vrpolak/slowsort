@@ -1,6 +1,5 @@
 """Module that defines ComparablePayload class, useful for overriding comparisons."""
 
-
 from functools import total_ordering
 
 

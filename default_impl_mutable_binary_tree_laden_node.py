@@ -1,9 +1,13 @@
-"""Module that provides the default implementation of MutableBinaryTreeLadenNode."""
+"""Module that provides the default implementation of MutableBinaryTreeLadenNode.
+
+TODO: Delete as no search here uses this."""
 
 from mutable_binary_tree_laden_node import MutableBinaryTreeLadenNode
 
+
 class DefaultImplMutableBinaryTreeLadenNode(MutableBinaryTreeLadenNode):
     """Node of binary tree, carrying a payload object.
+
     Left and right children are either None or also Node.
     Self is altered regularily to avoid excessive object creation."""
 

@@ -1,5 +1,7 @@
-"""Module that defines stabilize_sorted decorator applicable to unstable sorted() candidates."""
+"""Module that defines stabilize_sorted decorator applicable to unstable sorted() candidates.
 
+TODO: Do we care to make this work with sort based on weak queues?
+"""
 
 from comparable_secondary import ComparableSecondary
 from pep_3140 import List

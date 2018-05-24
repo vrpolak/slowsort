@@ -1,4 +1,4 @@
-# Nothing importand here, just me being sad about PEP 3140.
+# Nothing important here, just me being sad about PEP 3140.
 
 class StrT1(object):
 

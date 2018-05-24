@@ -5,8 +5,11 @@ from pep_3140 import List
 from sorted_using_heap import sorted_using_functional_stable_heap
 from functional_priority_queue import FunctionalPriorityQueue
 
+
 class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
-    """Heap: An implementation, usable as a queue, least priority value in, first out.
+    """A heap that is functional, stable, lazy, and zigzag pairing.
+
+    Heap: An implementation, usable as a queue, least priority value in, first out.
     Functional: After creation, state is never changed. Constructing modified object to return if needed.
     Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
     Mutable: Self is altered regularily to avoid excessive object creation.
@@ -31,6 +34,10 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
         """Return number of stored elements."""
         return self.length
 
+    def copy(self):
+        """Return shalow copy for the caller to mutate."""
+        return FunctionalStableLazyZigzagPairingHeap(self.top_item, Deque(self.forrest), len(self))
+
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
         return self.length < 1
@@ -42,8 +49,8 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     def ensure_top_demoted(self):
         """In case heap has a top, demote it so merge is easier."""
         if self.top_item is None:
-            return self
-        return FunctionalStableLazyZigzagPairingHeap(None, Deque[self], self.length)
+            return self.copy()
+        return FunctionalStableLazyZigzagPairingHeap(None, Deque([self]), self.length)
 
     def add(self, item):
         """Add item to self, prioritized after current items, do not compare yet."""
@@ -52,19 +59,19 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
         ensured.length += 1
         return ensured
 
-    def include_after(self, heap):
+    def _include_after(self, heap):
         """Include another heap, prioritized after current items."""
-        ensured = self.ensure_top_promoted()
-        ensured.forrest.append(heap)
-        ensured.length += len(heap)
-        return ensured
+        copied = self.copy()
+        copied.forrest.append(heap)
+        copied.length += len(heap)
+        return copied
 
-    def include_before(self, heap):
+    def _include_before(self, heap):
         """Include another heap, prioritized before current items."""
-        ensured = self.ensure_top_promoted()
-        ensured.forrest.appendleft(heap)
-        ensured.length += len(heap)
-        return ensured
+        copied = self.copy()
+        copied.forrest.appendleft(heap)
+        copied.length += len(heap)
+        return copied
 
     def peek(self):
         """Return heap with top promoted and top item."""
@@ -86,7 +93,7 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade and return."""
         if (self.top_item is not None) or (not self.forrest):
-            return self
+            return self.copy()
         popping_forrest = Deque(self.forrest)
         while len(popping_forrest) > 1:
             # zig
@@ -96,9 +103,9 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
                 latter, latter_top = popping_forrest.pop().peek()
                 former, former_top = popping_forrest.pop().peek()
                 if latter_top < former_top:
-                    new_forrest.appendleft(latter.include_before(former))
+                    new_forrest.appendleft(latter._include_before(former))
                 else:
-                    new_forrest.appendleft(former.include_after(latter))
+                    new_forrest.appendleft(former._include_after(latter))
             if popping_forrest:
                 new_forrest.appendleft(popping_forrest.pop())
             popping_forrest = new_forrest
@@ -108,9 +115,9 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
                 former, former_top = popping_forrest.popleft().peek()
                 latter, latter_top = popping_forrest.popleft().peek()
                 if latter_top < former_top:
-                    new_forrest.append(latter.include_before(former))
+                    new_forrest.append(latter._include_before(former))
                 else:
-                    new_forrest.append(former.include_after(latter))
+                    new_forrest.append(former._include_after(latter))
             if popping_forrest:
                 new_forrest.append(popping_forrest.pop())
             popping_forrest = new_forrest

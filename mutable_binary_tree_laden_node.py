@@ -1,9 +1,13 @@
-"""Module that defines abstract mutable binary tree node which carries a payload."""
+"""Module that defines abstract mutable binary tree node which carries a payload.
+
+TODO: Delete as no search here uses this."""
+
 
 # TODO: Make this Abstract Base Class so that users can rely on isinstance.
 
 class MutableBinaryTreeLadenNode(object):
     """Node of binary tree, carrying a payload object.
+
     Left and right children are either None or also Node.
     Self is altered regularily to avoid excessive object creation."""
 

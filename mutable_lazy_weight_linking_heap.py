@@ -5,8 +5,11 @@ from comparable_payload import ComparablePayload
 from sorted_using_heap import sorted_using_mutable_unstable_heap
 from mutable_priority_queue import MutablePriorityQueue
 
+
 class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
-    """Heap: An implementation, usable as a queue, least priority value in, first out.
+    """A heap that is mutable, lazy and weight linking.
+
+    Heap: An implementation, usable as a queue, least priority value in, first out.
     Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
     Mutable: Self is altered regularily to avoid excessive object creation.
     Linking: Top is found by repeated linking of two sub-heaps, but selection is not a simple pairing.
@@ -58,9 +61,8 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         self.forrest.append(ComparablePayload(1, singleton_heap))
         self.weight += 1
 
-    def include(self, heap):
+    def _include(self, heap):
         """Include another heap, no comparisons other than to top, which is assumed to be done already."""
-        self.ensure_top_promoted()
         weight = len(heap)
         self.forrest.append(ComparablePayload(weight, heap))
         self.weight += weight
@@ -91,11 +93,11 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
             smaller = self.forrest[0].payload
             bigger = self.forrest[1].payload
             if smaller.peek() <= bigger.peek():
-                smaller.include(bigger)
+                smaller._include(bigger)
                 self.forrest[:2] = []
                 self.forrest.append(ComparablePayload(len(smaller), smaller))
             else:
-                bigger.include(smaller)
+                bigger._include(smaller)
                 self.forrest[:2] = []
                 self.forrest.append(ComparablePayload(len(bigger), bigger))
             self.forrest.sort()

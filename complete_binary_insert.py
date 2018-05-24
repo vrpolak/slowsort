@@ -1,6 +1,5 @@
 """Module that defines binary insert operation using complete pivoting strategy."""
 
-
 from pluggable_binary_insert import mutating_pluggable_binary_insert
 
 
@@ -13,7 +12,7 @@ def complete_pivot(lower_index, upper_index):
     https://xlinux.nist.gov/dads//HTML/completeBinaryTree.html
     where "left" means "towards higher indexes".
 
-    # TODO: Figure out a more specific adjective than "complete".
+    TODO: Figure out a more specific adjective than "complete".
     """
     spread = upper_index - lower_index
     assert spread >= 2

@@ -5,8 +5,11 @@ from pep_3140 import List
 from sorted_using_heap import sorted_using_mutable_stable_heap
 from mutable_priority_queue import MutablePriorityQueue
 
+
 class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
-    """Heap: An implementation, usable as a queue, least priority value in, first out.
+    """A heap that is mutable, stable, lazy, and zigzag pairing.
+
+    Heap: An implementation, usable as a queue, least priority value in, first out.
     Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
     Mutable: Self is altered regularily to avoid excessive object creation.
     Stable: Two include methods to allow caller decide tiebreaker.
@@ -16,7 +19,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
     This implementation uses Deque to store ordered collection of sub-heaps."""
 
     def __init__(self, top_item=None, forrest=None, known_length=None):
-        """Initialize a queue.."""
+        """Initialize a queue."""
         self.top_item = top_item
         self.forrest = forrest if forrest is not None else Deque()
         if known_length is not None:
@@ -51,15 +54,13 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
         self.forrest.append(MutableStableLazyZigzagPairingHeap(top_item=item))
         self.length += 1
 
-    def include_after(self, heap):
+    def _include_after(self, heap):
         """Include another heap, prioritized after current items."""
-        self.ensure_top_promoted()
         self.length += len(heap)
         self.forrest.append(heap)
 
-    def include_before(self, heap):
+    def _include_before(self, heap):
         """Include another heap, prioritized before current items."""
-        self.ensure_top_promoted()
         self.length += len(heap)
         self.forrest.appendleft(heap)
 
@@ -80,6 +81,7 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
         self.length -= 1
         return item
 
+    # TODO: Merge this into peek(), weak heaps suggest that makes things faster. Or is it not bothering with len?
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
         if (self.top_item is not None) or (not self.forrest):
@@ -91,10 +93,10 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                 latter = self.forrest.pop()
                 former = self.forrest.pop()
                 if latter.peek() < former.peek():
-                    latter.include_before(former)
+                    latter._include_before(former)
                     new_forrest.appendleft(latter)
                 else:
-                    former.include_after(latter)
+                    former._include_after(latter)
                     new_forrest.appendleft(former)
             if self.forrest:
                 new_forrest.appendleft(self.forrest.pop())
@@ -105,10 +107,10 @@ class MutableStableLazyZigzagPairingHeap(MutablePriorityQueue):
                 former = self.forrest.popleft()
                 latter = self.forrest.popleft()
                 if latter.peek() < former.peek():
-                    latter.include_before(former)
+                    latter._include_before(former)
                     new_forrest.append(latter)
                 else:
-                    former.include_after(latter)
+                    former._include_after(latter)
                     new_forrest.append(former)
             if self.forrest:
                 new_forrest.append(self.forrest.pop())

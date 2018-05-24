@@ -2,8 +2,8 @@
 
 This uses functools to generate rich comparison functions.
 Equivalence test does not increment counter, as sorts never do
-equal test directly, and with that every comparison increments counter exactly once."""
-
+equal test directly, and with that every comparison increments counter exactly once.
+"""
 
 from functools import total_ordering
 
@@ -19,7 +19,7 @@ class SimpleCounter(object):
 
 @total_ordering
 class ComparisonCountingWrapper(object):
-    """A wrapper for values which counts comparison operations"""
+    """A wrapper for values which counts comparison operations."""
 
     def __init__(self, value, counter):
         """Wrap the value using the counter object."""

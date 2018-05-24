@@ -1,6 +1,5 @@
 """Module that defines Ford-Johnson sorting algorithm using complete insertion."""
 
-
 from complete_binary_insert import mutating_complete_binary_insert
 from pluggable_ford_johnson_sort import pluggable_ford_johnson_sort
 from stabilize_sorted import stabilize_sorted

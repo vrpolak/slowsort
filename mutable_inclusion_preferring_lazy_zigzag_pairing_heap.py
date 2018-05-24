@@ -5,8 +5,11 @@ from pep_3140 import List
 from sorted_using_heap import sorted_using_mutable_unstable_heap
 from mutable_priority_queue import MutablePriorityQueue
 
+
 class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
-    """Heap: An implementation, usable as a queue, least priority value in, first out.
+    """A heap that is mutable, inclusion preferring, lazy, and zigzag pairing.
+
+    Heap: An implementation, usable as a queue, least priority value in, first out.
     Lazy: Least element is determined only upon pop, in hope to get more relevant comparisons.
     Mutable: Self is altered regularily to avoid excessive object creation.
     Inclusion preferring: Only one inclusion method, included heap is preferred to existing ones.
@@ -54,9 +57,8 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         self.forrest.append(heap)
         self.length += 1
 
-    def include_before(self, heap):
+    def _include_before(self, heap):
         """Include another heap, prioritized before current items."""
-        self.ensure_top_promoted()
         self.length += len(heap)
         self.forrest.appendleft(heap)
 
@@ -88,10 +90,10 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
                 latter = self.forrest.pop()
                 former = self.forrest.pop()
                 if latter.peek() < former.peek():
-                    latter.include_before(former)
+                    latter._include_before(former)
                     new_forrest.appendleft(latter)
                 else:
-                    former.include_before(latter)
+                    former._include_before(latter)
                     new_forrest.appendleft(former)
             if self.forrest:
                 new_forrest.appendleft(self.forrest.pop())
@@ -102,10 +104,10 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
                 former = self.forrest.popleft()
                 latter = self.forrest.popleft()
                 if latter.peek() < former.peek():
-                    latter.include_before(former)
+                    latter._include_before(former)
                     new_forrest.append(latter)
                 else:
-                    former.include_before(latter)
+                    former._include_before(latter)
                     new_forrest.append(former)
             if self.forrest:
                 new_forrest.append(self.forrest.pop())

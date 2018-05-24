@@ -48,4 +48,4 @@ def suite(sort, scale=100, seed=42):
     count = 0
     for size in range(scale):
         count += counting_test(sort, size)
-    print "Total count needed for scale scale tests:", count
+    print "Total count needed for scale tests:", count

@@ -3,14 +3,16 @@
 
 def mutating_pluggable_binary_insert(choose_pivot, element, target, lower_index, upper_index):
     """Insert element into target list.
+
     Lower index is confirmed to be before, can be -1;
     Upper index is confirmed to be after, can be len(target).
 
     Pivot element is chosen by calling choose_pivot(lower_index, upper_index).
-    # TODO: Will there be pivoting strategies depending on more than just spread?
+    TODO: Will there be pivoting strategies depending on more than just spread?
 
     In case of tie, element is inseted to upper part.
-    Return None as this is operation mutates target."""
+    Return None as this is operation mutates target.
+    """
     spread = upper_index - lower_index
     assert spread > 0, "Binary insert encountered non-positive window size."
     if spread <= 1:

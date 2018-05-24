@@ -1,7 +1,7 @@
 """Module providing few iterable types with str() respecting PEP 3140.
 
-FIXME: Guard against possible cycles in graphs of references."""
-
+FIXME: Guard against possible cycles in graphs of references.
+"""
 
 from collections import deque
 

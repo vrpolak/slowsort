@@ -2,15 +2,15 @@
 
 This uses functools to generate rich comparison functions.
 Equivalence test does not log as sorts never do equal test directly,
-and with that every comparison logs exactly once."""
-
+and with that every comparison logs exactly once.
+"""
 
 from functools import total_ordering
 
 
 @total_ordering
 class ComparisonLoggingWrapper(object):
-    """A wrapper for values which logs comparison operations"""
+    """A wrapper for values which logs comparison operations."""
 
     def __init__(self, value, log):
         """Wrap the value using the log object."""

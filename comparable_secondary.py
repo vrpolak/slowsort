@@ -1,6 +1,5 @@
 """Module that defines ComparableSecondary class, useful for making sort algorithms stable."""
 
-
 from functools import total_ordering
 
 

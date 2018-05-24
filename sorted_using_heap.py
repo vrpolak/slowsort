@@ -2,8 +2,8 @@
 
 Curently functions return sorted List.
 Alternative would be to return function which performs sorted,
-but that way is less friendly for adding debug logging."""
-
+but that way is less friendly for adding debug logging.
+"""
 
 from stabilize_sorted import stabilize_pluggable_sorted
 from pep_3140 import List

@@ -8,6 +8,7 @@ from pep_3140 import List
 from comparison_counting_wrapper import ComparisonCountingWrapper
 from comparison_counting_wrapper import SimpleCounter
 from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sorted
+from mutable_stable_lazy_zigzag_pairing_weak_heap import mslzpwh_sorted
 from functional_stable_lazy_zigzag_pairing_heap import fslzph_sorted
 from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sorted
 from mutable_lazy_weight_linking_heap import mlwlh_sorted
@@ -98,6 +99,7 @@ sorts_input = (
     (mlwlh_sorted, 2, "mlwlh"),
     (miplzph_sorted, 2, "miplzph"),
     (mslzph_sorted, 2, "mslzph"),
+    (mslzpwh_sorted, 2, "mslzpwh"),
     (fslzph_sorted, 2, "fslzph"),
 )
 

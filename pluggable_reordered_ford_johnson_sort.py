@@ -1,6 +1,5 @@
 """Module that defines a reordered version of Ford-Johnson sorting algorithm with pluggable details."""
 
-
 from pep_3140 import Deque
 from pep_3140 import List
 from comparable_payload import ComparablePayload
@@ -9,12 +8,14 @@ from comparable_payload import ComparablePayload
 def pluggable_reordered_ford_johnson_sort(mutating_insert, original_source):
     """Form pairs and sort them according to top elements (odd element at the end).
     Binary-insert dangling elements in an order that maximizes efficiency.
+
     The order takes into account placement of previous inserts,
     basically it can change order of inserts to differ from the Jacobsthal one.
 
     Original_source should be iterable supporting len() and element should support comparison.
     Returned value is either the original, or a new List.
-    This sort is functional, in sense it does not modify original source."""
+    This sort is functional, in sense it does not modify original source.
+    """
     len_original_source = len(original_source)
     if len_original_source < 2:
         return original_source

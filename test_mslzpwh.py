@@ -1,0 +1,4 @@
+from mutable_stable_lazy_zigzag_pairing_weak_heap import mslzpwh_sorted
+from pluggable_test import suite
+
+suite(mslzpwh_sorted)

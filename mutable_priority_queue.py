@@ -2,8 +2,10 @@
 
 # TODO: Make this Abstract Base Class so that users can rely on isinstance.
 
+
 class MutablePriorityQueue(object):
     """Priority queue, least priority value in, first out.
+
     Self is altered regularily to avoid excessive object creation."""
 
     def __init__(self):
