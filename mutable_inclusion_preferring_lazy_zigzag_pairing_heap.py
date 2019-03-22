@@ -19,14 +19,14 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
 
     This implementation uses Deque to store ordered collection of sub-heaps."""
 
-    def __init__(self, top_item=None, forrest=None, known_length=None):
+    def __init__(self, top_item=None, forest=None, known_length=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest if forrest is not None else Deque()
+        self.forest = forest if forest is not None else Deque()
         if known_length is not None:
             self.length = known_length
         else:
-            self.length = sum(map(len, self.forrest))
+            self.length = sum(map(len, self.forest))
             self.length += (self.top_item is not None)
 
     def __len__(self):
@@ -45,22 +45,22 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
         """In case heap has a top, demote it so merge is easier."""
         if self.top_item is None:
             return
-        demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forrest, self.length)
+        demoted = MutableInclusionPreferringLazyZigzagPairingHeap(self.top_item, self.forest, self.length)
         self.top_item = None
-        self.forrest = Deque([demoted])
+        self.forest = Deque([demoted])
 
     def add(self, item):
         """Add item to self, prioritized after current items, do not compare yet."""
         self.ensure_top_demoted()
         heap = MutableInclusionPreferringLazyZigzagPairingHeap(top_item=item)
         # Addition is not inclusion, so late items are not preferred.
-        self.forrest.append(heap)
+        self.forest.append(heap)
         self.length += 1
 
     def _include_before(self, heap):
         """Include another heap, prioritized before current items."""
         self.length += len(heap)
-        self.forrest.appendleft(heap)
+        self.forest.appendleft(heap)
 
     def peek(self):
         """Return least priority item, this includes promoting top, but not extraction."""
@@ -81,40 +81,40 @@ class MutableInclusionPreferringLazyZigzagPairingHeap(MutablePriorityQueue):
 
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
-        if (self.top_item is not None) or (not self.forrest):
+        if (self.top_item is not None) or (not self.forest):
             return
-        while len(self.forrest) > 1:
+        while len(self.forest) > 1:
             # zig
-            new_forrest = Deque()
-            while len(self.forrest) > 1:
-                latter = self.forrest.pop()
-                former = self.forrest.pop()
+            new_forest = Deque()
+            while len(self.forest) > 1:
+                latter = self.forest.pop()
+                former = self.forest.pop()
                 if latter.peek() < former.peek():
                     latter._include_before(former)
-                    new_forrest.appendleft(latter)
+                    new_forest.appendleft(latter)
                 else:
                     former._include_before(latter)
-                    new_forrest.appendleft(former)
-            if self.forrest:
-                new_forrest.appendleft(self.forrest.pop())
-            self.forrest = new_forrest
+                    new_forest.appendleft(former)
+            if self.forest:
+                new_forest.appendleft(self.forest.pop())
+            self.forest = new_forest
             # zag
-            new_forrest = Deque()
-            while len(self.forrest) > 1:
-                former = self.forrest.popleft()
-                latter = self.forrest.popleft()
+            new_forest = Deque()
+            while len(self.forest) > 1:
+                former = self.forest.popleft()
+                latter = self.forest.popleft()
                 if latter.peek() < former.peek():
                     latter._include_before(former)
-                    new_forrest.append(latter)
+                    new_forest.append(latter)
                 else:
                     former._include_before(latter)
-                    new_forrest.append(former)
-            if self.forrest:
-                new_forrest.append(self.forrest.pop())
-            self.forrest = new_forrest
-        new_state = self.forrest.pop()
+                    new_forest.append(former)
+            if self.forest:
+                new_forest.append(self.forest.pop())
+            self.forest = new_forest
+        new_state = self.forest.pop()
         self.top_item = new_state.top_item
-        self.forrest = new_state.forrest
+        self.forest = new_state.forest
 
 
 def miplzph_sorted(source):

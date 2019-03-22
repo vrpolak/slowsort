@@ -8,7 +8,7 @@ class MutablePriorityWeakQueue(object):
 
     The main difference from ordinary "non-weak" queues
     is that those can act as storages.
-    Weak queue is not storage, it is only a cache.
+    Weak queue is not a storage, it is only a cache.
     If the object is not referenced from elsewhere,
     it will be deleted from the queue.
     Weak queues seem to be easier to implement

@@ -18,18 +18,18 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
 
     This implementation uses List and sort() to store collection of sub-heaps.
 
-    Sub-heaps are prioritized by their length, so item of forrest is ComparablePayload(length, sub-heap)
+    Sub-heaps are prioritized by their length, so item of forest is ComparablePayload(length, sub-heap)
     Items are checked by "is None", as empty string and zero are valid items with false truth value."""
 
-    def __init__(self, top_item=None, forrest=None, known_weight=None):
+    def __init__(self, top_item=None, forest=None, known_weight=None):
         """Initialize the heap, possibly to a prepared state."""
         self.top_item = top_item
-        self.forrest = forrest if forrest is not None else List()
+        self.forest = forest if forest is not None else List()
         # It is not called known_length as there may be different weight algorithms in future.
         if known_weight is not None:
             self.weight = known_weight
             return
-        if forrest:
+        if forest:
             raise NotImplementedError("Implement iteration over MutableStableLazyZigzagPairingHeap which does not change its state.")
         self.weight = 0 if top_item is None else 1
 
@@ -50,21 +50,21 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         if self.top_item is None:
             return
         known_weight = self.weight
-        demoted = MutableLazyWeightLinkingHeap(self.top_item, self.forrest, known_weight)
+        demoted = MutableLazyWeightLinkingHeap(self.top_item, self.forest, known_weight)
         self.top_item = None
-        self.forrest = List([ComparablePayload(known_weight, demoted)])
+        self.forest = List([ComparablePayload(known_weight, demoted)])
 
     def add(self, item):
         """Add item to self, do not compare yet."""
         self.ensure_top_demoted()
         singleton_heap = MutableLazyWeightLinkingHeap(top_item=item)
-        self.forrest.append(ComparablePayload(1, singleton_heap))
+        self.forest.append(ComparablePayload(1, singleton_heap))
         self.weight += 1
 
     def _include(self, heap):
         """Include another heap, no comparisons other than to top, which is assumed to be done already."""
         weight = len(heap)
-        self.forrest.append(ComparablePayload(weight, heap))
+        self.forest.append(ComparablePayload(weight, heap))
         self.weight += weight
 
     def peek(self):
@@ -86,24 +86,24 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
 
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
-        if (self.top_item is not None) or (not self.forrest):
+        if (self.top_item is not None) or (not self.forest):
             return
-        self.forrest.sort()
-        while len(self.forrest) > 1:
-            smaller = self.forrest[0].payload
-            bigger = self.forrest[1].payload
+        self.forest.sort()
+        while len(self.forest) > 1:
+            smaller = self.forest[0].payload
+            bigger = self.forest[1].payload
             if smaller.peek() <= bigger.peek():
                 smaller._include(bigger)
-                self.forrest[:2] = []
-                self.forrest.append(ComparablePayload(len(smaller), smaller))
+                self.forest[:2] = []
+                self.forest.append(ComparablePayload(len(smaller), smaller))
             else:
                 bigger._include(smaller)
-                self.forrest[:2] = []
-                self.forrest.append(ComparablePayload(len(bigger), bigger))
-            self.forrest.sort()
-        new_state = self.forrest[0].payload
+                self.forest[:2] = []
+                self.forest.append(ComparablePayload(len(bigger), bigger))
+            self.forest.sort()
+        new_state = self.forest[0].payload
         self.top_item = new_state.top_item
-        self.forrest = new_state.forrest
+        self.forest = new_state.forest
 
 
 def mlwlh_sorted(source):

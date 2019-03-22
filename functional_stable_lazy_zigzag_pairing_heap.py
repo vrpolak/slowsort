@@ -20,14 +20,14 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     This implementation uses Deque to store ordered collection of sub-heaps.
     Note that Deque is mutable."""
 
-    def __init__(self, top_item=None, forrest=None, known_length=None):
+    def __init__(self, top_item=None, forest=None, known_length=None):
         """Initialize a queue.."""
         self.top_item = top_item
-        self.forrest = forrest if forrest is not None else Deque()
+        self.forest = forest if forest is not None else Deque()
         if known_length is not None:
             self.length = known_length
         else:
-            self.length = sum(map(len, self.forrest))
+            self.length = sum(map(len, self.forest))
             self.length += (self.top_item is not None)
 
     def __len__(self):
@@ -36,7 +36,7 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
 
     def copy(self):
         """Return shalow copy for the caller to mutate."""
-        return FunctionalStableLazyZigzagPairingHeap(self.top_item, Deque(self.forrest), len(self))
+        return FunctionalStableLazyZigzagPairingHeap(self.top_item, Deque(self.forest), len(self))
 
     def is_empty(self):
         """Return boolean corresponding to emptiness of the queue."""
@@ -55,21 +55,21 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
     def add(self, item):
         """Add item to self, prioritized after current items, do not compare yet."""
         ensured = self.ensure_top_demoted()
-        ensured.forrest.append(FunctionalStableLazyZigzagPairingHeap(top_item=item))
+        ensured.forest.append(FunctionalStableLazyZigzagPairingHeap(top_item=item))
         ensured.length += 1
         return ensured
 
     def _include_after(self, heap):
         """Include another heap, prioritized after current items."""
         copied = self.copy()
-        copied.forrest.append(heap)
+        copied.forest.append(heap)
         copied.length += len(heap)
         return copied
 
     def _include_before(self, heap):
         """Include another heap, prioritized before current items."""
         copied = self.copy()
-        copied.forrest.appendleft(heap)
+        copied.forest.appendleft(heap)
         copied.length += len(heap)
         return copied
 
@@ -92,36 +92,36 @@ class FunctionalStableLazyZigzagPairingHeap(FunctionalPriorityQueue):
 
     def ensure_top_promoted(self):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade and return."""
-        if (self.top_item is not None) or (not self.forrest):
+        if (self.top_item is not None) or (not self.forest):
             return self.copy()
-        popping_forrest = Deque(self.forrest)
-        while len(popping_forrest) > 1:
+        popping_forest = Deque(self.forest)
+        while len(popping_forest) > 1:
             # zig
-            new_forrest = Deque()
-            while len(popping_forrest) > 1:
+            new_forest = Deque()
+            while len(popping_forest) > 1:
                 # Sub-heaps should always be promoted, but better save state then be then sorry.
-                latter, latter_top = popping_forrest.pop().peek()
-                former, former_top = popping_forrest.pop().peek()
+                latter, latter_top = popping_forest.pop().peek()
+                former, former_top = popping_forest.pop().peek()
                 if latter_top < former_top:
-                    new_forrest.appendleft(latter._include_before(former))
+                    new_forest.appendleft(latter._include_before(former))
                 else:
-                    new_forrest.appendleft(former._include_after(latter))
-            if popping_forrest:
-                new_forrest.appendleft(popping_forrest.pop())
-            popping_forrest = new_forrest
+                    new_forest.appendleft(former._include_after(latter))
+            if popping_forest:
+                new_forest.appendleft(popping_forest.pop())
+            popping_forest = new_forest
             # zag
-            new_forrest = Deque()
-            while len(popping_forrest) > 1:
-                former, former_top = popping_forrest.popleft().peek()
-                latter, latter_top = popping_forrest.popleft().peek()
+            new_forest = Deque()
+            while len(popping_forest) > 1:
+                former, former_top = popping_forest.popleft().peek()
+                latter, latter_top = popping_forest.popleft().peek()
                 if latter_top < former_top:
-                    new_forrest.append(latter._include_before(former))
+                    new_forest.append(latter._include_before(former))
                 else:
-                    new_forrest.append(former._include_after(latter))
-            if popping_forrest:
-                new_forrest.append(popping_forrest.pop())
-            popping_forrest = new_forrest
-        return popping_forrest.pop()
+                    new_forest.append(former._include_after(latter))
+            if popping_forest:
+                new_forest.append(popping_forest.pop())
+            popping_forest = new_forest
+        return popping_forest.pop()
 
 
 def fslzph_sorted(source):
