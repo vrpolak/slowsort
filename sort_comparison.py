@@ -93,6 +93,7 @@ class SortOverRange(object):
 
 
 sorts_input = (
+    (sorted, 2, "timsort"),
     (rfj_sorted, 20, "rfj"),
     (cfj_sorted, 16, "cfj"),
     (hfj_sorted, 4, "hfj"),
