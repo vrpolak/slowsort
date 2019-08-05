@@ -82,6 +82,7 @@ class MutableStableLazyZigzagPairingWeakHeap(MutablePriorityWeakQueue):
             while len(self.forest) > 1:
                 latter_heap = self.forest.pop()
                 former_heap = self.forest.pop()
+                # We need to peek and check for None as items might got deleted.
                 latter_item = latter_heap.peek()
                 former_item = former_heap.peek()
                 if latter_item is None:

@@ -7,9 +7,12 @@ import time
 from pep_3140 import List
 from comparison_counting_wrapper import ComparisonCountingWrapper
 from comparison_counting_wrapper import SimpleCounter
+from mutable_stable_counting_lazy_zigzag_pairing_heap import msclzph_sorted
 from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sorted
 from mutable_stable_lazy_zigzag_pairing_weak_heap import mslzpwh_sorted
+from functional_stable_counting_lazy_zigzag_pairing_heap import fsclzph_sorted
 from functional_stable_lazy_zigzag_pairing_heap import fslzph_sorted
+from mutable_counting_inclusion_preferring_lazy_zigzag_pairing_heap import mciplzph_sorted
 from mutable_inclusion_preferring_lazy_zigzag_pairing_heap import miplzph_sorted
 from mutable_lazy_weight_linking_heap import mlwlh_sorted
 from halving_ford_johnson_sort import hfj_sorted
@@ -98,9 +101,12 @@ sorts_input = (
     (cfj_sorted, 16, "cfj"),
     (hfj_sorted, 4, "hfj"),
     (mlwlh_sorted, 2, "mlwlh"),
+    (mciplzph_sorted, 2, "mciplzph"),
     (miplzph_sorted, 2, "miplzph"),
+    (msclzph_sorted, 2, "msclzph"),
     (mslzph_sorted, 2, "mslzph"),
     (mslzpwh_sorted, 2, "mslzpwh"),
+    (fsclzph_sorted, 2, "fsclzph"),
     (fslzph_sorted, 2, "fslzph"),
 )
 

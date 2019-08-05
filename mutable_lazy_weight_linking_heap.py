@@ -2,7 +2,7 @@
 
 from pep_3140 import List
 from comparable_payload import ComparablePayload
-from sorted_using_heap import sorted_using_mutable_unstable_heap
+from sorted_using_heap import sorted_using_mutable_unstable_counting_heap
 from mutable_priority_queue import MutablePriorityQueue
 
 
@@ -88,11 +88,12 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
         """Do pairwise includes in zigzag fashion until there is only one tree. Then upgrade."""
         if (self.top_item is not None) or (not self.forest):
             return
-        self.forest.sort()
         while len(self.forest) > 1:
+            self.forest.sort()
             smaller = self.forest[0].payload
             bigger = self.forest[1].payload
-            if smaller.peek() <= bigger.peek():
+            # Sub-heaps should be nonempty and have top promoted.
+            if smaller.top_item <= bigger.top_item:
                 smaller._include(bigger)
                 self.forest[:2] = []
                 self.forest.append(ComparablePayload(len(smaller), smaller))
@@ -100,7 +101,6 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
                 bigger._include(smaller)
                 self.forest[:2] = []
                 self.forest.append(ComparablePayload(len(bigger), bigger))
-            self.forest.sort()
         new_state = self.forest[0].payload
         self.top_item = new_state.top_item
         self.forest = new_state.forest
@@ -108,4 +108,4 @@ class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
 
 def mlwlh_sorted(source):
     """Return new list of itemss, sorted using the mslzp heap."""
-    return sorted_using_mutable_unstable_heap(MutableLazyWeightLinkingHeap, source)
+    return sorted_using_mutable_unstable_counting_heap(MutableLazyWeightLinkingHeap, source)

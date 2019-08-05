@@ -1,9 +1,12 @@
 """Module that defines abstract mutable priority weak queue."""
 
 
+from mutable_priority_queue import MutablePriorityQueue
+
+
 # TODO: Make this Abstract Base Class so that users can rely on isinstance.
 
-class MutablePriorityWeakQueue(object):
+class MutablePriorityWeakQueue(MutablePriorityQueue):
     """Priority queue, least priority value in, first out (or vanish).
 
     The main difference from ordinary "non-weak" queues
@@ -21,19 +24,4 @@ class MutablePriorityWeakQueue(object):
     Instead, peek() always works, but returns None if the queue is found empty.
 
     Self is altered regularily to avoid excessive object creation."""
-
-    def __init__(self):
-        """Initialize an empty queue."""
-        raise NotImplementedError
-
-    def add(self, item):
-        """Add item to self, return None."""
-        raise NotImplementedError
-
-    def peek(self):
-        """Locate the least item, and return that or None."""
-        raise NotImplementedError
-
-    def pop(self):
-        """Extract the least item from self and return that or None."""
-        raise NotImplementedError
+    pass
