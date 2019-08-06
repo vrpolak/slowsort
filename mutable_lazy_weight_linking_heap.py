@@ -3,10 +3,10 @@
 from pep_3140 import List
 from comparable_payload import ComparablePayload
 from sorted_using_heap import sorted_using_mutable_unstable_counting_heap
-from mutable_priority_queue import MutablePriorityQueue
+from mutable_counting_priority_queue import MutableCountingPriorityQueue
 
 
-class MutableLazyWeightLinkingHeap(MutablePriorityQueue):
+class MutableLazyWeightLinkingHeap(MutableCountingPriorityQueue):
     """A heap that is mutable, lazy and weight linking.
 
     Heap: An implementation, usable as a queue, least priority value in, first out.

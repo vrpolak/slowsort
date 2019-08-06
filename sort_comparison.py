@@ -10,6 +10,7 @@ from comparison_counting_wrapper import SimpleCounter
 from mutable_stable_counting_lazy_zigzag_pairing_heap import msclzph_sorted
 from mutable_stable_lazy_zigzag_pairing_heap import mslzph_sorted
 from mutable_stable_lazy_zigzag_pairing_weak_heap import mslzpwh_sorted
+from mutable_stable_deletable_lazy_zigzag_pairing_heap import msdlzph_sorted
 from functional_stable_counting_lazy_zigzag_pairing_heap import fsclzph_sorted
 from functional_stable_lazy_zigzag_pairing_heap import fslzph_sorted
 from mutable_counting_inclusion_preferring_lazy_zigzag_pairing_heap import mciplzph_sorted
@@ -105,6 +106,7 @@ sorts_input = (
     (miplzph_sorted, 2, "miplzph"),
     (msclzph_sorted, 2, "msclzph"),
     (mslzph_sorted, 2, "mslzph"),
+    (msdlzph_sorted, 2, "msdlzph"),
     (mslzpwh_sorted, 2, "mslzpwh"),
     (fsclzph_sorted, 2, "fsclzph"),
     (fslzph_sorted, 2, "fslzph"),
