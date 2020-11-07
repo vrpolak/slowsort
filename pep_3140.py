@@ -11,15 +11,7 @@ class List(list):
 
     def __str__(self):
         """Return comma+space separated str of items in square brackets."""
-        if not self:
-            return "[]"
-        substr_list = []
-        for item in self:
-            substr_list.append(", ")
-            substr_list.append(str(item))
-        substr_list.append("]")
-        substr_list[0] = "["
-        return "".join(substr_list)
+        return "[" + ", ".join([str(item) for item in self]) + "]"
 
 
 class Tuple(tuple):
@@ -27,15 +19,7 @@ class Tuple(tuple):
 
     def __str__(self):
         """Return comma+space separated str of items in round brackets."""
-        if not self:
-            return "()"
-        substr_list = []
-        for item in self:
-            substr_list.append(", ")
-            substr_list.append(str(item))
-        substr_list.append(")")
-        substr_list[0] = "("
-        return "".join(substr_list)
+        return "(" + ", ".join([str(item) for item in self]) + ")"
 
 
 class Dict(dict):
@@ -43,17 +27,7 @@ class Dict(dict):
 
     def __str__(self):
         """Return comma+space separated str of items in curly brackets."""
-        if not self:
-            return "{}"
-        substr_list = []
-        for key, value in self.items():
-            substr_list.append(", ")
-            substr_list.append(str(key))
-            substr_list.append(": ")
-            substr_list.append(str(value))
-        substr_list.append("}")
-        substr_list[0] = "{"
-        return "".join(substr_list)
+        return "{" + ", ".join([str(key) + ": " + str(value) for key, value in self.items()]) + "}"
 
 
 class Deque(deque):
