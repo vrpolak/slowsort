@@ -54,12 +54,10 @@ def pluggable_reordered_ford_johnson_sort(mutating_insert, original_source):
                 dangler_index = anchor.payload
                 if dangler_index > 0:
                     anchor.payload = 0
-                    # print "inserting dangler at efficiency", efficiency_item.key, "at index", anchor_index, "for source size", len_original_source
                     mutating_insert(ComparablePayload(danglers[dangler_index], 0), indexed_target, -1, anchor_index)
                     break
             elif anchor_index == len_target:
                 if odd_item is not None:
-                    # print "inserting odd at efficiency", efficiency_item.key, "at index", anchor_index, "for source size", len_original_source
                     mutating_insert(ComparablePayload(odd_item, 0), indexed_target, -1, len_target)
                     odd_item = None
                     break

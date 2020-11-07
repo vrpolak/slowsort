@@ -17,7 +17,9 @@ class MutableStableDeletableLazyZigzagPairingHeap(MutableDeletablePriorityQueue)
     Pairing: Most subheap comparisons are on pairs of "equal" sub-heaps.
     Zigzag: The odd sub-heap is left at alternating ends.
 
-    This implementation uses Deque to store ordered collection of sub-heaps."""
+    This implementation uses Deque to store ordered collection of sub-heaps.
+    Limitation: Items have to be hashable, as deletion is lazy, using set.
+    """
 
     def __init__(self, top_item=None, forest=None, deleted=None):
         """Initialize a queue."""

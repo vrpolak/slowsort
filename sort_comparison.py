@@ -32,7 +32,7 @@ class SortAtLength(object):
         self.summ = 0.0
         self.sqsumm = 0.0
         self.time = 0.0
-        print '.',
+        print('.', end="")
         sys.stdout.flush()
         self.add_run()
         self.add_run()
@@ -71,9 +71,9 @@ class SortOverRange(object):
         self.weight = weight
         self.name = name
         self.length = length_limit
-        print "Creating base data for", name
+        print(f"Creating base data for {name}")
         self.sorts = [SortAtLength(tested_sort, length) for length in range(length_limit)]
-        print
+        print()
         self.runs = 2
         self.time = sum([sort.time for sort in self.sorts])
 
@@ -113,13 +113,13 @@ sorts_input = (
 )
 
 length = 257
-print "Testing on range up to", length
+print(f"Testing on range up to {length}")
 sorts = [SortOverRange(item[0], item[1], item[2], length) for item in sorts_input]
 while 1:
     sorts = sorted(sorts, key=operator.attrgetter("weight", "name"))
     for sort in sorts:
-        print sort.name, ": average", sort.get_average(), "sigma", sort.get_sigma(), "time average", sort.time / sort.runs, "runs", sort.runs
+        print(f"{sort.name}: average {sort.get_average()} sigma {sort.get_sigma()} time average {sort.time / sort.runs} runs {sort.runs}")
     sorts = sorted(sorts, key=operator.methodcaller("get_priority"))
-    print
-    print "Getting more data for", sorts[0].name
+    print()
+    print(f"Getting more data for {sorts[0].name}")
     sorts[0].add_run()

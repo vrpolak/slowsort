@@ -3,6 +3,10 @@
 This uses functools to generate rich comparison functions.
 Equivalence test does not increment counter, as sorts never do
 equal test directly, and with that every comparison increments counter exactly once.
+
+In order to support queues that require hashable items,
+hash function is implemented, and the has value
+does not change with the comparison counter.
 """
 
 from functools import total_ordering
@@ -25,6 +29,10 @@ class ComparisonCountingWrapper(object):
         """Wrap the value using the counter object."""
         self.value = value
         self.counter = counter
+
+    def __hash__(self):
+        """Return hash of the wrapped value."""
+        return hash(self.value)
 
     def __eq__(self, other):
         """Equality test, NOT incrementing counter."""

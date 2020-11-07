@@ -19,14 +19,14 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 def verbose_test(sort, bare_source):
     """Few tests using logger and small source."""
-    print "Verbose test with", repr(bare_source)
+    print(f"Verbose test with {bare_source!}")
     source = List([ComparisonLoggingWrapper(value, log) for value in bare_source])
     result = List([item.value for item in sort(source)])
     assert result == sorted(bare_source), str(result)
 
 def counting_test(sort, size, seed=42):
     """Random sfuffle range of given size, sort using counting wrapper and print result"""
-    print "Counting test on length", size,
+    print(f"Counting test on length {size}")
     sys.stdout.flush
     random.seed(seed)
     source = List(range(size))
@@ -34,7 +34,7 @@ def counting_test(sort, size, seed=42):
     counter = SimpleCounter()
     wrapped_source = List([ComparisonCountingWrapper(value, counter) for value in source])
     result = List([item.value for item in sort(wrapped_source)])
-    print "used", counter.count, "comparisons."
+    print(f"used {counter.count} comparisons.")
     assert result == List(range(size)), str(result)
     return counter.count
 
@@ -48,4 +48,4 @@ def suite(sort, scale=100, seed=42):
     count = 0
     for size in range(scale):
         count += counting_test(sort, size)
-    print "Total count needed for scale tests:", count
+    print(f"Total count needed for scale tests: {count}")

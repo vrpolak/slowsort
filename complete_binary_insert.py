@@ -20,7 +20,7 @@ def complete_pivot(lower_index, upper_index):
     complement_whole = spread - lesser_whole
     if not complement_whole:
         # Full tree. Fairly common, least lucky, but effective case in Ford-Johnson.
-        return lower_index + spread / 2
+        return lower_index + spread // 2
     lesser_half = lesser_whole >> 1
     if complement_whole >= lesser_half:
         # Few shorter paths on lower scale, common case especially for longer insertion targets.

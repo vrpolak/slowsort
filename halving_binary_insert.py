@@ -9,7 +9,7 @@ def halving_pivot(lower_index, upper_index):
     Choose the exact middle, of lower of two most middle indexes."""
     spread = upper_index - lower_index
     assert spread >= 2
-    return lower_index + spread / 2
+    return lower_index + spread // 2
 
 
 def mutating_halving_binary_insert(element, target, lower_index, upper_index):
