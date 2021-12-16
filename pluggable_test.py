@@ -19,7 +19,7 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 def verbose_test(sort, bare_source):
     """Few tests using logger and small source."""
-    print(f"Verbose test with {bare_source!}")
+    print(f"Verbose test with {bare_source}")
     source = List([ComparisonLoggingWrapper(value, log) for value in bare_source])
     result = List([item.value for item in sort(source)])
     assert result == sorted(bare_source), str(result)
