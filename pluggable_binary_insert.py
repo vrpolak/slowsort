@@ -10,7 +10,7 @@ def mutating_pluggable_binary_insert(choose_pivot, element, target, lower_index,
     Pivot element is chosen by calling choose_pivot(lower_index, upper_index).
     TODO: Will there be pivoting strategies depending on more than just spread?
 
-    In case of tie, element is inseted to upper part.
+    In case of tie, element is inserted to upper part.
     Return None as this is operation mutates target.
     """
     spread = upper_index - lower_index
@@ -23,4 +23,3 @@ def mutating_pluggable_binary_insert(choose_pivot, element, target, lower_index,
         mutating_pluggable_binary_insert(choose_pivot, element, target, lower_index, pivot_index)
     else:
         mutating_pluggable_binary_insert(choose_pivot, element, target, pivot_index, upper_index)
-
