@@ -8,6 +8,7 @@ from pep_3140 import List
 from comparison_logging_wrapper import ComparisonLoggingWrapper
 from comparison_counting_wrapper import ComparisonCountingWrapper
 from comparison_counting_wrapper import SimpleCounter
+from interactive_comparison_wrapper import InteractiveComparisonWrapper
 
 # FIXME: Replace this with introspectable logger, to avoid eye-independent tests.
 log = logging.getLogger("logging_test")
@@ -38,6 +39,24 @@ def counting_test(sort, size, seed=42):
     assert result == List(range(size)), str(result)
     return counter.count
 
+def interactive_test(sort):
+    items = List()
+    while 1:
+        item = input("Next identifier, empty for end of list to sort: ")
+        if not item:
+            break
+        if item in items:
+            print("Already present, try again.")
+        else:
+            items.append(item)
+            print(f"Ok, {len(items)} items so far.")
+    wrapped = List([InteractiveComparisonWrapper(item) for item in items])
+    print("Sorting starts")
+    result = List([item.value for item in sort(wrapped)])
+    print("Sorted, listing in order:")
+    for value in result:
+        print(f"{value}")
+
 def suite(sort, scale=100, seed=42):
     verbose_test(sort, [])
     verbose_test(sort, [0])
@@ -49,3 +68,4 @@ def suite(sort, scale=100, seed=42):
     for size in range(scale):
         count += counting_test(sort, size)
     print(f"Total count needed for scale tests: {count}")
+    interactive_test(sort)
