@@ -11,7 +11,7 @@ class List(list):
 
     def __str__(self):
         """Return comma+space separated str of items in square brackets."""
-        return "[" + ", ".join([str(item) for item in self]) + "]"
+        return "[" + ", ".join(str(item) for item in self) + "]"
 
 
 class Tuple(tuple):
@@ -19,7 +19,7 @@ class Tuple(tuple):
 
     def __str__(self):
         """Return comma+space separated str of items in round brackets."""
-        return "(" + ", ".join([str(item) for item in self]) + ")"
+        return "(" + ", ".join(str(item) for item in self) + ")"
 
 
 class Dict(dict):
@@ -27,7 +27,7 @@ class Dict(dict):
 
     def __str__(self):
         """Return comma+space separated str of items in curly brackets."""
-        return "{" + ", ".join([str(key) + ": " + str(value) for key, value in self.items()]) + "}"
+        return "{" + ", ".join(str(key) + ": " + str(value) for key, value in self.items()) + "}"
 
 
 class Deque(deque):
@@ -37,3 +37,10 @@ class Deque(deque):
         """Return str of List corresponding to self."""
         # TODO: What about "Deque([1, 2, ...])"?
         return str(List(self))
+
+class Frozenset(frozenset):
+    """A frozenset with str support."""
+
+    def __str__(self):
+        """Return comma+space separated str of items in curly brackets."""
+        return "{" + ", ".join(str(item) for item in self) + "}"
